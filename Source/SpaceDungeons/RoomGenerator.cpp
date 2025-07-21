@@ -1,0 +1,181 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "RoomGenerator.h"
+#include "Room.h"
+#include "Components/BoxComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Components/ArrowComponent.h"
+#include "AssetRegistryModule.h"
+#include "Engine/Blueprint.h"
+#include "Kismet/KismetSystemLibrary.h" 
+
+// Sets default values
+ARoomGenerator::ARoomGenerator()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+// Called when the game starts or when spawned
+void ARoomGenerator::BeginPlay()
+{
+	Super::BeginPlay();
+
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.Owner = this;
+    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    FVector SpawnLocation = FVector(0, 0, 0); // adjust as needed
+    FRotator SpawnRotation = FRotator(0, 0, 0);
+
+    //ARoom* SpawnedRoom = GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
+
+    FindDerivedBlueprints();
+    ARoom* SpawnedRoom = SpawnRandomClass();
+
+    for (int i = 0; i < 5; i++)
+    {
+        if (SpawnedRoom)
+        {
+            TArray<FRoomExit>& Exits = SpawnedRoom->ExitData;
+
+            for (int j = Exits.Num(); j > 0; j--)
+            {
+                int32 ExitIndex = FMath::RandRange(0, Exits.Num() - 1);
+
+                const FRoomExit& Exit = Exits[ExitIndex];
+
+                Exit.ExitComponent->SetHiddenInGame(false);
+
+                //Exits.RemoveAt(ExitIndex);
+
+                ARoom* NewSpawnedRoom = SpawnRandomClass();//GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
+
+                //if (!NewSpawnedRoom) continue;
+
+                int32 EntranceIndex = FMath::RandRange(0, NewSpawnedRoom->ExitData.Num() - 1);
+                const FRoomExit& Entrance = NewSpawnedRoom->ExitData[EntranceIndex];
+
+                Entrance.ExitComponent->SetHiddenInGame(false);
+
+                // 2. Get info from the previous room's exit and the new room's entrance
+                FVector FromLocation = Exit.ExitComponent->GetComponentLocation();
+
+                ExitRotation = Exit.ExitComponent->GetComponentRotation();
+                EntranceRotation = Entrance.ExitComponent->GetComponentRotation();
+
+                PitchDelta = FMath::FindDeltaAngleDegrees(ExitRotation.Pitch, EntranceRotation.Pitch);
+               
+                NewSpawnedRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0)); 
+
+                if (Exit.ExitComponent->GetForwardVector().Equals(Entrance.ExitComponent->GetForwardVector(), 1.f))
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("EQUAL"))
+                    NewSpawnedRoom->AddActorLocalRotation(FRotator(180, 0, 0));
+                }
+
+                FVector ToLocation = Entrance.ExitComponent->GetComponentLocation();
+
+                FVector NewOffset = FromLocation - ToLocation;
+                NewSpawnedRoom->AddActorWorldOffset(NewOffset);                
+
+                TArray<FOverlapResult> Overlaps;
+                FCollisionQueryParams QueryParams;
+                QueryParams.AddIgnoredActor(NewSpawnedRoom);
+
+                bool bOverlapping = GetWorld()->OverlapMultiByChannel(
+                    Overlaps,
+                    NewSpawnedRoom->BoxComp->GetComponentLocation(),
+                    FQuat::Identity,
+                    ECC_WorldDynamic,
+                    FCollisionShape::MakeBox(NewSpawnedRoom->BoxComp->GetScaledBoxExtent()),
+                    QueryParams
+                );
+
+                if (bOverlapping)
+                {
+                    NewSpawnedRoom->Destroy(); 
+                }
+                else
+                {
+                    SpawnedRoom = NewSpawnedRoom;
+                    break;
+                }
+
+            }
+
+        }
+    }
+	
+}
+
+// Called every frame
+void ARoomGenerator::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void ARoomGenerator::FindDerivedBlueprints()
+{
+    SpawnableClasses.Empty();
+
+    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+    FARFilter Filter;
+    Filter.ClassNames.Add(UBlueprint::StaticClass()->GetFName());
+    Filter.bRecursiveClasses = true;
+
+    TArray<FAssetData> AssetDataList;
+    AssetRegistryModule.Get().GetAssets(Filter, AssetDataList);
+
+    for (const FAssetData& AssetData : AssetDataList)
+    {
+        FString ParentClassPath;
+        if (!AssetData.GetTagValue(FName("ParentClass"), ParentClassPath))
+        {
+            continue;
+        }
+
+        // Clean up class path formatting
+        ParentClassPath.RemoveFromStart(TEXT("Class'"));
+        ParentClassPath.RemoveFromEnd(TEXT("'"));
+
+        UClass* ParentClass = LoadObject<UClass>(nullptr, *ParentClassPath);
+        if (ParentClass && ParentClass->IsChildOf(ARoom::StaticClass()))
+        {
+            UBlueprint* BlueprintAsset = Cast<UBlueprint>(AssetData.GetAsset());
+            if (BlueprintAsset && BlueprintAsset->GeneratedClass)
+            {
+                UClass* Class = BlueprintAsset->GeneratedClass;
+                if (Class && Class->IsChildOf(ARoom::StaticClass()))
+                {
+                    SpawnableClasses.Add(TSubclassOf<ARoom>(Class));
+                }
+            }
+        }
+    }
+
+    UE_LOG(LogTemp, Warning, TEXT("Found %d derived Blueprints"), SpawnableClasses.Num());
+}
+
+ARoom* ARoomGenerator::SpawnRandomClass()
+{
+    if (SpawnableClasses.Num() > 0)
+    {
+        int32 Index = FMath::RandRange(0, SpawnableClasses.Num() - 1);
+        TSubclassOf<ARoom> ClassToSpawn = SpawnableClasses[Index];
+
+        if (ClassToSpawn)
+        {
+            FActorSpawnParameters SpawnParams;
+            FVector Location = GetActorLocation(); // Or any location
+            FRotator Rotation = GetActorRotation();
+
+            return GetWorld()->SpawnActor<ARoom>(ClassToSpawn, Location, Rotation, SpawnParams);
+        }
+    }
+
+    return nullptr;
+}

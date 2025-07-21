@@ -1,0 +1,11 @@
+C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Development\SpaceDungeons\Definitions.SpaceDungeons.h
+C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Source\SpaceDungeons\PlaceholderAnimInstance.h
+C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Inc\SpaceDungeons\PlaceholderAnimInstance.generated.h
+C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Source\SpaceDungeons\SpaceDungeonsCharacter.h
+C:\Program Files\Epic Games\UE_4.26\Engine\Source\Runtime\Engine\Classes\GameFramework/Character.h
+C:\Program Files\Epic Games\UE_4.26\Engine\Source\Runtime\Engine\Classes\GameFramework/CharacterMovementReplication.h
+C:\Program Files\Epic Games\UE_4.26\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\CharacterMovementReplication.generated.h
+C:\Program Files\Epic Games\UE_4.26\Engine\Source\Runtime\Engine\Classes\GameFramework/RootMotionSource.h
+C:\Program Files\Epic Games\UE_4.26\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\RootMotionSource.generated.h
+C:\Program Files\Epic Games\UE_4.26\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\Character.generated.h
+C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Inc\SpaceDungeons\SpaceDungeonsCharacter.generated.h

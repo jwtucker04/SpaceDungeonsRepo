@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\SpaceDungeons.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{AC3D40F8-49AE-4398-BE21-5797C897091C}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\SpaceDungeons.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\SpaceDungeonsEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{8B838551-E625-4E0C-9F72-FBD6E472ED1E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\SpaceDungeons">
+      <UniqueIdentifier>{8B772409-EE10-49C0-A4AF-8E1E32D3F2D0}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\SpaceDungeons\PlaceholderAnimInstance.cpp">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\SpaceDungeons\PlaceholderAnimInstance.h">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\SpaceDungeons\Room.cpp">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\SpaceDungeons\Room.h">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\SpaceDungeons\RoomGenerator.cpp">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\SpaceDungeons\RoomGenerator.h">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClInclude>
+    <None Include="..\..\Source\SpaceDungeons\SpaceDungeons.Build.cs">
+      <Filter>Source\SpaceDungeons</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\SpaceDungeons\SpaceDungeons.cpp">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\SpaceDungeons\SpaceDungeons.h">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\SpaceDungeons\SpaceDungeonsCharacter.cpp">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\SpaceDungeons\SpaceDungeonsCharacter.h">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\SpaceDungeons\SpaceDungeonsGameMode.cpp">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\SpaceDungeons\SpaceDungeonsGameMode.h">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
