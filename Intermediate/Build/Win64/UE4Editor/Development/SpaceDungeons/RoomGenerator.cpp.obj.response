@@ -265,8 +265,11 @@
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\shared"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\winrt"
+/FI"C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\SpaceDungeonsEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Yu"C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\SpaceDungeonsEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Fp"C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\SpaceDungeonsEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
 "C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Source\SpaceDungeons\RoomGenerator.cpp"
-/FI"C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Development\SpaceDungeons\Definitions.h"
+/FI"C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Development\SpaceDungeons\Definitions.SpaceDungeons.h"
 /Fo"C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Development\SpaceDungeons\RoomGenerator.cpp.obj"
 /TP
 /GR-

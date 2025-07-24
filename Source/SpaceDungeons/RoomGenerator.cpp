@@ -9,6 +9,7 @@
 #include "AssetRegistryModule.h"
 #include "Engine/Blueprint.h"
 #include "Kismet/KismetSystemLibrary.h" 
+#include "Engine/StaticMeshActor.h"
 
 // Sets default values
 ARoomGenerator::ARoomGenerator()
@@ -41,17 +42,19 @@ void ARoomGenerator::BeginPlay()
         {
             TArray<FRoomExit>& Exits = SpawnedRoom->ExitData;
 
-            for (int j = Exits.Num(); j > 0; j--)
+            while(Exits.Num() > 0)
             {
                 int32 ExitIndex = FMath::RandRange(0, Exits.Num() - 1);
 
                 const FRoomExit& Exit = Exits[ExitIndex];
+
 
                 Exit.ExitComponent->SetHiddenInGame(false);
 
                 //Exits.RemoveAt(ExitIndex);
 
                 ARoom* NewSpawnedRoom = SpawnRandomClass();//GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
+
 
                 //if (!NewSpawnedRoom) continue;
 
@@ -73,13 +76,16 @@ void ARoomGenerator::BeginPlay()
                 if (Exit.ExitComponent->GetForwardVector().Equals(Entrance.ExitComponent->GetForwardVector(), 1.f))
                 {
                     UE_LOG(LogTemp, Warning, TEXT("EQUAL"))
+              
                     NewSpawnedRoom->AddActorLocalRotation(FRotator(180, 0, 0));
                 }
 
                 FVector ToLocation = Entrance.ExitComponent->GetComponentLocation();
 
                 FVector NewOffset = FromLocation - ToLocation;
-                NewSpawnedRoom->AddActorWorldOffset(NewOffset);                
+                NewSpawnedRoom->AddActorWorldOffset(NewOffset);
+                NewSpawnedRoom->AddActorWorldOffset(Exit.ExitComponent->GetForwardVector() * 1000);
+
 
                 TArray<FOverlapResult> Overlaps;
                 FCollisionQueryParams QueryParams;
@@ -100,6 +106,36 @@ void ARoomGenerator::BeginPlay()
                 }
                 else
                 {
+                    FActorSpawnParameters TunnelParams;
+                    TunnelParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+                    FRotator TunnelRotation = FRotator(0, 0, 180);
+
+                    // Spawn a basic StaticMeshActor
+                    AStaticMeshActor* Tunnel = GetWorld()->SpawnActor<AStaticMeshActor>(FromLocation, TunnelRotation, TunnelParams);
+
+                    if (Tunnel)
+                    {
+                        // Load the mesh at runtime (replace with your mesh path!)
+                        UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/My_Stuff/Rooms/SpaceShipRoomsPass1_Tunnel.SpaceShipRoomsPass1_Tunnel")));
+                        if (Mesh)
+                        {
+                            Tunnel->GetStaticMeshComponent()->SetStaticMesh(Mesh);
+                            Tunnel->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable); // Optional
+
+                            Tunnel->AddActorLocalRotation(FRotator(Exit.ExitComponent->GetForwardVector().Rotation().Pitch, 0, 0));
+
+                            if (Exit.ExitComponent->GetForwardVector().Equals(Tunnel->GetActorForwardVector(), 1.f))
+                            {
+                                UE_LOG(LogTemp, Warning, TEXT("EQUAL"))
+
+                                Tunnel->AddActorLocalRotation(FRotator(180, 0, 0));
+                            }
+
+                            Tunnel->SetActorScale3D(FVector(2.0f)); // Optional
+                        }
+                    }
+
                     SpawnedRoom = NewSpawnedRoom;
                     break;
                 }
@@ -179,3 +215,22 @@ ARoom* ARoomGenerator::SpawnRandomClass()
 
     return nullptr;
 }
+
+
+//                  ((`\                      ___    
+//              ___  \\ '--._      ___,.----'`   ', /__,-
+//          .'`     `'    0  )    <___            |< \_
+//         /    \     '. __.'         `'----.,___-  \  ',
+//        _|    /_    \ \_\_                         '
+//      { _\______\ - '\__\_\      bnnuy
+
+ 
+//
+//                                               
+//           _____    ___.---_                   ' ` _            
+//        .'`   ,  ``   /      '-           _  \      '           <---- coriander leaf
+//       /  /  /     /       0    `.       /    - _____,- .__   
+//       |   /   /  -  /           |       \ _ .       '   
+//       \   .  __  '         __`.'             <     -
+//        '-___   ` - - ,___ `       pigy        `- '
+//
