@@ -38,6 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TArray<TSubclassOf<class ARoom>> SpawnableClasses;
 
+	TArray<class ARoom*> SpawnedRooms;
+
 	void FindDerivedBlueprints();
 
 	class ARoom* SpawnRandomClass();

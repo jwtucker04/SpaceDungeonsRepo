@@ -5,6 +5,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
+#include "AssetRegistryModule.h"
+
 
 // Sets default values
 ARoom::ARoom()
@@ -18,18 +20,6 @@ ARoom::ARoom()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
-	ExitT = CreateDefaultSubobject<UArrowComponent>(TEXT("TopExit"));
-	ExitT->SetupAttachment(Mesh);
-
-	ExitB = CreateDefaultSubobject<UArrowComponent>(TEXT("BottomExit"));
-	ExitB->SetupAttachment(Mesh);
-
-	ExitL = CreateDefaultSubobject<UArrowComponent>(TEXT("LeftExit"));
-	ExitL->SetupAttachment(Mesh);
-
-	ExitR = CreateDefaultSubobject<UArrowComponent>(TEXT("RightExit"));
-	ExitR->SetupAttachment(Mesh);
-
 	bOverlapped = false;
 }
 
@@ -42,7 +32,6 @@ void ARoom::BeginPlay()
 	CollectExits();
 
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ARoom::OnOverlapBegin);
-
 	
 }
 

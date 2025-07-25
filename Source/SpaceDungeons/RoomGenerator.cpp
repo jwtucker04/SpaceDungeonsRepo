@@ -35,114 +35,124 @@ void ARoomGenerator::BeginPlay()
 
     FindDerivedBlueprints();
     ARoom* SpawnedRoom = SpawnRandomClass();
+    ARoom* NewSpawnedRoom;
 
-    for (int i = 0; i < 5; i++)
+    for (int j = 0; j <= 3; j++)
     {
-        if (SpawnedRoom)
+        for (int i = 0; i < 3; i++)
         {
-            TArray<FRoomExit>& Exits = SpawnedRoom->ExitData;
-
-            while(Exits.Num() > 0)
+            if (SpawnedRoom)
             {
-                int32 ExitIndex = FMath::RandRange(0, Exits.Num() - 1);
+                TArray<FRoomExit>& Exits = SpawnedRoom->ExitData;
 
-                const FRoomExit& Exit = Exits[ExitIndex];
-
-
-                Exit.ExitComponent->SetHiddenInGame(false);
-
-                //Exits.RemoveAt(ExitIndex);
-
-                ARoom* NewSpawnedRoom = SpawnRandomClass();//GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
-
-
-                //if (!NewSpawnedRoom) continue;
-
-                int32 EntranceIndex = FMath::RandRange(0, NewSpawnedRoom->ExitData.Num() - 1);
-                const FRoomExit& Entrance = NewSpawnedRoom->ExitData[EntranceIndex];
-
-                Entrance.ExitComponent->SetHiddenInGame(false);
-
-                // 2. Get info from the previous room's exit and the new room's entrance
-                FVector FromLocation = Exit.ExitComponent->GetComponentLocation();
-
-                ExitRotation = Exit.ExitComponent->GetComponentRotation();
-                EntranceRotation = Entrance.ExitComponent->GetComponentRotation();
-
-                PitchDelta = FMath::FindDeltaAngleDegrees(ExitRotation.Pitch, EntranceRotation.Pitch);
-               
-                NewSpawnedRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0)); 
-
-                if (Exit.ExitComponent->GetForwardVector().Equals(Entrance.ExitComponent->GetForwardVector(), 1.f))
+                while (Exits.Num() > 0)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("EQUAL"))
-              
-                    NewSpawnedRoom->AddActorLocalRotation(FRotator(180, 0, 0));
-                }
+                    int32 ExitIndex = FMath::RandRange(0, Exits.Num() - 1);
 
-                FVector ToLocation = Entrance.ExitComponent->GetComponentLocation();
+                    const FRoomExit& Exit = Exits[ExitIndex];
 
-                FVector NewOffset = FromLocation - ToLocation;
-                NewSpawnedRoom->AddActorWorldOffset(NewOffset);
-                NewSpawnedRoom->AddActorWorldOffset(Exit.ExitComponent->GetForwardVector() * 1000);
+                    Exit.ExitComponent->SetHiddenInGame(false);
 
+                    NewSpawnedRoom = SpawnRandomClass();//GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
 
-                TArray<FOverlapResult> Overlaps;
-                FCollisionQueryParams QueryParams;
-                QueryParams.AddIgnoredActor(NewSpawnedRoom);
+                    //if (!NewSpawnedRoom) continue;
 
-                bool bOverlapping = GetWorld()->OverlapMultiByChannel(
-                    Overlaps,
-                    NewSpawnedRoom->BoxComp->GetComponentLocation(),
-                    FQuat::Identity,
-                    ECC_WorldDynamic,
-                    FCollisionShape::MakeBox(NewSpawnedRoom->BoxComp->GetScaledBoxExtent()),
-                    QueryParams
-                );
+                    int32 EntranceIndex = FMath::RandRange(0, NewSpawnedRoom->ExitData.Num() - 1);
+                    const FRoomExit& Entrance = NewSpawnedRoom->ExitData[EntranceIndex];
 
-                if (bOverlapping)
-                {
-                    NewSpawnedRoom->Destroy(); 
-                }
-                else
-                {
-                    FActorSpawnParameters TunnelParams;
-                    TunnelParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+                    Entrance.ExitComponent->SetHiddenInGame(false);
 
-                    FRotator TunnelRotation = FRotator(0, 0, 180);
+                    // 2. Get info from the previous room's exit and the new room's entrance
+                    FVector FromLocation = Exit.ExitComponent->GetComponentLocation();
 
-                    // Spawn a basic StaticMeshActor
-                    AStaticMeshActor* Tunnel = GetWorld()->SpawnActor<AStaticMeshActor>(FromLocation, TunnelRotation, TunnelParams);
+                    ExitRotation = Exit.ExitComponent->GetComponentRotation();
+                    EntranceRotation = Entrance.ExitComponent->GetComponentRotation();
 
-                    if (Tunnel)
+                    PitchDelta = FMath::FindDeltaAngleDegrees(ExitRotation.Pitch, EntranceRotation.Pitch);
+
+                    NewSpawnedRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0));
+
+                    if (Exit.ExitComponent->GetForwardVector().Equals(Entrance.ExitComponent->GetForwardVector(), 1.f))
                     {
-                        // Load the mesh at runtime (replace with your mesh path!)
-                        UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/My_Stuff/Rooms/SpaceShipRoomsPass1_Tunnel.SpaceShipRoomsPass1_Tunnel")));
-                        if (Mesh)
-                        {
-                            Tunnel->GetStaticMeshComponent()->SetStaticMesh(Mesh);
-                            Tunnel->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable); // Optional
+                        UE_LOG(LogTemp, Warning, TEXT("EQUAL"))
 
-                            Tunnel->AddActorLocalRotation(FRotator(Exit.ExitComponent->GetForwardVector().Rotation().Pitch, 0, 0));
-
-                            if (Exit.ExitComponent->GetForwardVector().Equals(Tunnel->GetActorForwardVector(), 1.f))
-                            {
-                                UE_LOG(LogTemp, Warning, TEXT("EQUAL"))
-
-                                Tunnel->AddActorLocalRotation(FRotator(180, 0, 0));
-                            }
-
-                            Tunnel->SetActorScale3D(FVector(2.0f)); // Optional
-                        }
+                            NewSpawnedRoom->AddActorLocalRotation(FRotator(180, 0, 0));
                     }
 
-                    SpawnedRoom = NewSpawnedRoom;
-                    break;
+                    FVector ToLocation = Entrance.ExitComponent->GetComponentLocation();
+
+                    FVector NewOffset = FromLocation - ToLocation;
+                    NewSpawnedRoom->AddActorWorldOffset(NewOffset);
+                    NewSpawnedRoom->AddActorWorldOffset(Exit.ExitComponent->GetForwardVector() * 1000);
+
+
+                    TArray<FOverlapResult> Overlaps;
+                    FCollisionQueryParams QueryParams;
+                    QueryParams.AddIgnoredActor(NewSpawnedRoom);
+
+                    bool bOverlapping = GetWorld()->OverlapMultiByChannel(
+                        Overlaps,
+                        NewSpawnedRoom->BoxComp->GetComponentLocation(),
+                        FQuat::Identity,
+                        ECC_WorldDynamic,
+                        FCollisionShape::MakeBox(NewSpawnedRoom->BoxComp->GetScaledBoxExtent()),
+                        QueryParams
+                    );
+
+                    if (bOverlapping)
+                    {
+                        Exits.RemoveAt(ExitIndex);
+                        NewSpawnedRoom->Destroy();
+                    }
+                    else
+                    {
+                        FActorSpawnParameters TunnelParams;
+                        TunnelParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+                        FRotator TunnelRotation = FRotator(0, 0, 180);
+
+                        // Spawn a basic StaticMeshActor
+                        AStaticMeshActor* Tunnel = GetWorld()->SpawnActor<AStaticMeshActor>(FromLocation, TunnelRotation, TunnelParams);
+
+                        if (Tunnel)
+                        {
+                            // Load the mesh at runtime (replace with your mesh path!)
+                            UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/My_Stuff/Rooms/SpaceShipRoomsPass1_Tunnel.SpaceShipRoomsPass1_Tunnel")));
+                            if (Mesh)
+                            {
+                                Tunnel->GetStaticMeshComponent()->SetStaticMesh(Mesh);
+                                Tunnel->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable); // Optional
+
+                                Tunnel->AddActorLocalRotation(FRotator(Exit.ExitComponent->GetForwardVector().Rotation().Pitch, 0, 0));
+
+                                if (Exit.ExitComponent->GetForwardVector().Equals(Tunnel->GetActorForwardVector(), 1.f))
+                                {
+                                    UE_LOG(LogTemp, Warning, TEXT("EQUAL"))
+
+                                        Tunnel->AddActorLocalRotation(FRotator(180, 0, 0));
+                                }
+
+                                Tunnel->SetActorScale3D(FVector(2.0f)); // Optional
+                            }
+                        }
+
+                        SpawnedRooms.Add(NewSpawnedRoom);
+
+                        SpawnedRoom = NewSpawnedRoom;
+                        break;
+                    }
+
                 }
 
             }
-
         }
+
+        int RandRoom = FMath::RandRange(0, SpawnedRooms.Num() - 2);
+
+        //NewSpawnedRoom = SpawnRandomClass();
+        SpawnedRoom = SpawnedRooms[RandRoom];
+
+
     }
 	
 }

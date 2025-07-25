@@ -21,7 +21,7 @@ void EmptyLinkFunctionForGeneratedCodeSpaceDungeons_init() {}
 				nullptr,
 				0,
 				PKG_CompiledIn | 0x00000000,
-				0x4AB6F9E4,
+				0xA045CA49,
 				0x697841DA,
 				METADATA_PARAMS(nullptr, 0)
 			};

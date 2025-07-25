@@ -38,18 +38,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UArrowComponent* ExitT;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UArrowComponent* ExitB;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UArrowComponent* ExitL;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UArrowComponent* ExitR;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stats")
 	TArray<USceneComponent*> Exits;
 

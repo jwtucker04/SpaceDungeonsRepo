@@ -25,7 +25,6 @@ void EmptyLinkFunctionForGeneratedCodeRoom() {}
 	ENGINE_API UScriptStruct* Z_Construct_UScriptStruct_FHitResult();
 	ENGINE_API UClass* Z_Construct_UClass_UBoxComponent_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_UStaticMeshComponent_NoRegister();
-	ENGINE_API UClass* Z_Construct_UClass_UArrowComponent_NoRegister();
 // End Cross Module References
 class UScriptStruct* FRoomExit::StaticStruct()
 {
@@ -254,22 +253,6 @@ static struct FScriptStruct_SpaceDungeons_StaticRegisterNativesFRoomExit
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Mesh_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_Mesh;
-#if WITH_METADATA
-		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_ExitT_MetaData[];
-#endif
-		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_ExitT;
-#if WITH_METADATA
-		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_ExitB_MetaData[];
-#endif
-		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_ExitB;
-#if WITH_METADATA
-		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_ExitL_MetaData[];
-#endif
-		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_ExitL;
-#if WITH_METADATA
-		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_ExitR_MetaData[];
-#endif
-		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_ExitR;
 		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_Exits_Inner;
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Exits_MetaData[];
@@ -318,38 +301,6 @@ static struct FScriptStruct_SpaceDungeons_StaticRegisterNativesFRoomExit
 	};
 #endif
 	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_Mesh = { "Mesh", nullptr, (EPropertyFlags)0x001000000008000d, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ARoom, Mesh), Z_Construct_UClass_UStaticMeshComponent_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ARoom_Statics::NewProp_Mesh_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_ARoom_Statics::NewProp_Mesh_MetaData)) };
-#if WITH_METADATA
-	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ARoom_Statics::NewProp_ExitT_MetaData[] = {
-		{ "Category", "Room" },
-		{ "EditInline", "true" },
-		{ "ModuleRelativePath", "Room.h" },
-	};
-#endif
-	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_ExitT = { "ExitT", nullptr, (EPropertyFlags)0x001000000008000d, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ARoom, ExitT), Z_Construct_UClass_UArrowComponent_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ARoom_Statics::NewProp_ExitT_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_ARoom_Statics::NewProp_ExitT_MetaData)) };
-#if WITH_METADATA
-	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ARoom_Statics::NewProp_ExitB_MetaData[] = {
-		{ "Category", "Room" },
-		{ "EditInline", "true" },
-		{ "ModuleRelativePath", "Room.h" },
-	};
-#endif
-	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_ExitB = { "ExitB", nullptr, (EPropertyFlags)0x001000000008000d, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ARoom, ExitB), Z_Construct_UClass_UArrowComponent_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ARoom_Statics::NewProp_ExitB_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_ARoom_Statics::NewProp_ExitB_MetaData)) };
-#if WITH_METADATA
-	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ARoom_Statics::NewProp_ExitL_MetaData[] = {
-		{ "Category", "Room" },
-		{ "EditInline", "true" },
-		{ "ModuleRelativePath", "Room.h" },
-	};
-#endif
-	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_ExitL = { "ExitL", nullptr, (EPropertyFlags)0x001000000008000d, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ARoom, ExitL), Z_Construct_UClass_UArrowComponent_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ARoom_Statics::NewProp_ExitL_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_ARoom_Statics::NewProp_ExitL_MetaData)) };
-#if WITH_METADATA
-	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ARoom_Statics::NewProp_ExitR_MetaData[] = {
-		{ "Category", "Room" },
-		{ "EditInline", "true" },
-		{ "ModuleRelativePath", "Room.h" },
-	};
-#endif
-	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_ExitR = { "ExitR", nullptr, (EPropertyFlags)0x001000000008000d, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ARoom, ExitR), Z_Construct_UClass_UArrowComponent_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ARoom_Statics::NewProp_ExitR_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_ARoom_Statics::NewProp_ExitR_MetaData)) };
 	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_Exits_Inner = { "Exits", nullptr, (EPropertyFlags)0x00000000000a0008, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, Z_Construct_UClass_USceneComponent_NoRegister, METADATA_PARAMS(nullptr, 0) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ARoom_Statics::NewProp_Exits_MetaData[] = {
@@ -381,10 +332,6 @@ static struct FScriptStruct_SpaceDungeons_StaticRegisterNativesFRoomExit
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_ARoom_Statics::PropPointers[] = {
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_BoxComp,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_Mesh,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_ExitT,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_ExitB,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_ExitL,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_ExitR,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_Exits_Inner,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_Exits,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_ExitData_Inner,
@@ -418,7 +365,7 @@ static struct FScriptStruct_SpaceDungeons_StaticRegisterNativesFRoomExit
 		}
 		return OuterClass;
 	}
-	IMPLEMENT_CLASS(ARoom, 601012327);
+	IMPLEMENT_CLASS(ARoom, 1641340797);
 	template<> SPACEDUNGEONS_API UClass* StaticClass<ARoom>()
 	{
 		return ARoom::StaticClass();
