@@ -29,9 +29,9 @@ void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CollectExits();
-
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ARoom::OnOverlapBegin);
+
+	CollectExits();
 	
 }
 
@@ -52,7 +52,7 @@ void ARoom::CollectExits()
 
 	for (USceneComponent* Child : MeshChildren)
 	{
-		if (Child)
+		if (IsValid(Child))
 		{
 			Exits.Add(Child);
 		}
@@ -66,7 +66,11 @@ void ARoom::CollectExits()
 
 		ExitInfo.ExitComponent = Exits[i];
 		ExitInfo.Index = i;
-		ExitInfo.Direction = ExitInfo.ExitComponent->GetForwardVector();
+
+		if (IsValid(ExitInfo.ExitComponent))
+		{
+			ExitInfo.Direction = ExitInfo.ExitComponent->GetForwardVector();
+		}
 
 		ExitData.Add(ExitInfo);
 	}
