@@ -2,12 +2,12 @@
 	"Targets": [
 		{
 			"Name": "SpaceDungeons",
-			"Path": "C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons\\Source\\SpaceDungeons.Target.cs",
+			"Path": "..\\Source\\SpaceDungeons.Target.cs",
 			"Type": "Game"
 		},
 		{
 			"Name": "SpaceDungeonsEditor",
-			"Path": "C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons\\Source\\SpaceDungeonsEditor.Target.cs",
+			"Path": "..\\Source\\SpaceDungeonsEditor.Target.cs",
 			"Type": "Editor"
 		}
 	]

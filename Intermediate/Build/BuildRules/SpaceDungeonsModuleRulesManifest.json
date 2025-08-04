@@ -1,8 +1,8 @@
 {
 	"SourceFiles": [
-		"C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons\\Source\\SpaceDungeons\\SpaceDungeons.Build.cs",
-		"C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons\\Source\\SpaceDungeons.Target.cs",
-		"C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons\\Source\\SpaceDungeonsEditor.Target.cs"
+		"C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons 5.6\\Source\\SpaceDungeons\\SpaceDungeons.Build.cs",
+		"C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons 5.6\\Source\\SpaceDungeons.Target.cs",
+		"C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons 5.6\\Source\\SpaceDungeonsEditor.Target.cs"
 	],
-	"EngineVersion": "4.26.2"
+	"EngineVersion": "5.6.0"
 }

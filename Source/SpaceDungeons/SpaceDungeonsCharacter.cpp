@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SpaceDungeonsCharacter.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
+//#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -31,7 +31,7 @@ ASpaceDungeonsCharacter::ASpaceDungeonsCharacter()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->RotationRate = FRotator(540.0f, 0.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
@@ -78,7 +78,7 @@ void ASpaceDungeonsCharacter::SetupPlayerInputComponent(class UInputComponent* P
 
 void ASpaceDungeonsCharacter::Tick(float DeltaTime)
 {
-	SetActorLocation(FVector(0, GetActorLocation().Y, GetActorLocation().Z));
+	//SetActorLocation(FVector(0, GetActorLocation().Y, GetActorLocation().Z));
 
 	FHitResult OutHit;
 	FCollisionQueryParams CollisionParams;
@@ -109,13 +109,15 @@ void ASpaceDungeonsCharacter::Tick(float DeltaTime)
 				{
 					Dir = 1;
 				}
-
+				
+				
 				//FVector ForwardPush = FVector(0, Dir*PushDistance, 0)* PushDistance;
 
 				MoveRight(Dir*PushDistance); // Sweep for safety
 			}
 
 			SetActorRotation(FMath::RInterpTo(GetActorRotation(), FRotationMatrix::MakeFromXZ(GetActorForwardVector(), OutHit.Normal).Rotator(), DeltaTime, 10.f));
+
 
 			MovementStatus = (EMovementStatus::EMS_OnWall);
 		}
@@ -159,7 +161,7 @@ void ASpaceDungeonsCharacter::Tick(float DeltaTime)
 		bStuck = false;
 
 	}
-	if (OutHit.GetActor())
+	if (1==0)//OutHit.GetActor())
 	{
 		GEngine->AddOnScreenDebugMessage(
 			-1,
@@ -191,20 +193,20 @@ void ASpaceDungeonsCharacter::Boost()
 			GetCharacterMovement()->BrakingDecelerationFlying = 0.f;
 
 			// Side scroller: Intersect with a plane at the character's Y location
-			float PlaneX = GetActorLocation().X;
+			float PlaneX = GetActorLocation().Y;
 
 			// Solve for t in: RayOrigin + t * RayDir = Point on Plane (Y = PlaneY)
-			float t = (PlaneX - WorldLocation.X) / WorldDirection.X;
+			float t = (PlaneX - WorldLocation.Y) / WorldDirection.Y;
 			FVector MouseWorldPos = WorldLocation + t * WorldDirection;
 
 			// Calculate direction from character to mouse position
 			FVector Direction = (MouseWorldPos - GetActorLocation());
-			Direction.X = 0; // Ignore Y to constrain to XZ
+			Direction.Y = 0; // Ignore Y to constrain to XZ
 			Direction.Normalize();
 
 			UE_LOG(LogTemp, Warning, TEXT("Jump"))
 
-				GetCharacterMovement()->AddImpulse(Direction * 1000.0f, true);
+			GetCharacterMovement()->AddImpulse(Direction * 1000.0f, true);
 		}
 	}
 
@@ -252,7 +254,7 @@ void ASpaceDungeonsCharacter::MoveRight(float Value)
 
 		DesiredYaw = (InputSign >= 0.f) ? 0.f : 180.f;
 
-		FRotator DesiredMeshRot = FRotator(0.f, DesiredYaw, 0.f); // Just yaw
+		FRotator DesiredMeshRot = FRotator(0, DesiredYaw, 0); // Just yaw
 
 		// smooth interpolation
 		FRotator CurrentRot = GetMesh()->GetRelativeRotation();
@@ -264,7 +266,6 @@ void ASpaceDungeonsCharacter::MoveRight(float Value)
 
 		FVector Direction = FRotationMatrix(Rotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, Value);
-
 
 	}
 }

@@ -10,5 +10,6 @@ public class SpaceDungeonsTarget : TargetRules
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("SpaceDungeons");
+
 	}
 }

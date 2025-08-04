@@ -26,8 +26,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, Category = "This Rotation Bullshit")
-	float PitchDelta;
+	//UPROPERTY(EditAnywhere, Category = "This Rotation Bullshit")
+	//float PitchDelta;
 
 	UPROPERTY(EditAnywhere, Category = "This Rotation Bullshit")
 	FRotator ExitRotation;

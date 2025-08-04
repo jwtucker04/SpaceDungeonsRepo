@@ -1,5 +1,0 @@
-C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Development\SpaceDungeons\Definitions.SpaceDungeons.h
-C:\Program Files\Epic Games\UE_4.26\Engine\Source\Runtime\CoreUObject\Public\UObject/GeneratedCppIncludes.h
-C:\Program Files\Epic Games\UE_4.26\Engine\Source\Runtime\CoreUObject\Public\UObject/MetaData.h
-C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Source\SpaceDungeons/RoomGenerator.h
-C:\Users\jwtuc\Documents\Unreal Projects\SpaceDungeons\Intermediate\Build\Win64\UE4Editor\Inc\SpaceDungeons\RoomGenerator.generated.h

@@ -5,8 +5,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
-#include "AssetRegistryModule.h"
-
+#include "AssetRegistry/AssetRegistryModule.h"
+#include "Engine/EngineTypes.h"
 
 // Sets default values
 ARoom::ARoom()
@@ -69,7 +69,7 @@ void ARoom::CollectExits()
 
 		if (IsValid(ExitInfo.ExitComponent))
 		{
-			ExitInfo.Direction = ExitInfo.ExitComponent->GetForwardVector();
+			ExitInfo.Direction = ExitInfo.ExitComponent->GetForwardVector().GetSafeNormal();;
 		}
 
 		ExitData.Add(ExitInfo);
