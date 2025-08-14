@@ -16,6 +16,7 @@
 #include "Engine/HitResult.h"
 #include "Engine/OverlapResult.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/Pawn.h"
 
 // Sets default values
 ARoomGenerator::ARoomGenerator()
@@ -67,44 +68,48 @@ void ARoomGenerator::BeginPlay()
                     //NewSpawnedRoom = GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
                     NewSpawnedRoom->CollectExits();
 
-
-                    //if (!NewSpawnedRoom) continue;
-
                     int32 EntranceIndex = FMath::RandRange(0, NewSpawnedRoom->ExitData.Num() - 1);
-                    const FRoomExit& Entrance = NewSpawnedRoom->ExitData[EntranceIndex];
+                    FRoomExit* Entrance = &NewSpawnedRoom->ExitData[EntranceIndex];
+                    FVector FromLocation = FVector(0,0,0);
 
-                    Entrance.ExitComponent->SetHiddenInGame(false);
+                    int32 EngineCheckIterator = 100;
+
+                    Entrance->ExitComponent->SetHiddenInGame(false);
 
                     // 2. Get info from the previous room's exit and the new room's entrance
-                    FVector FromLocation = Exit.ExitComponent->GetComponentLocation();
+                    FromLocation = Exit.ExitComponent->GetComponentLocation();
 
                     ExitRotation = Exit.ExitComponent->GetComponentRotation();
-                    EntranceRotation = Entrance.ExitComponent->GetComponentRotation();
+                    EntranceRotation = Entrance->ExitComponent->GetComponentRotation();
 
                     float PitchDelta = FMath::FindDeltaAngleDegrees(
                         Exit.ExitComponent->GetForwardVector().Rotation().Pitch,
-                        Entrance.ExitComponent->GetForwardVector().Rotation().Pitch);
+                        Entrance->ExitComponent->GetForwardVector().Rotation().Pitch);
 
                     NewSpawnedRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0));
 
+
                     FVector ExitDir = Exit.ExitComponent->GetForwardVector().GetSafeNormal();
-                    FVector EntranceDir = Entrance.ExitComponent->GetForwardVector().GetSafeNormal();
+                    FVector EntranceDir = Entrance->ExitComponent->GetForwardVector().GetSafeNormal();
 
-                    if (NewSpawnedRoom)
+
+                    if (FVector::DotProduct(ExitDir, EntranceDir) > 0.99f)
                     {
-                        if (FVector::DotProduct(ExitDir, EntranceDir) > 0.99f)
-                        {
-                            NewSpawnedRoom->AddActorLocalRotation(FRotator(180.f, 0.f, 0.f));
-                        }
-
-
-                        FVector ToLocation = Entrance.ExitComponent->GetComponentLocation();
-
-                        FVector NewOffset = FromLocation - ToLocation;
-                        NewSpawnedRoom->AddActorWorldOffset(NewOffset);
-                        NewSpawnedRoom->AddActorWorldOffset(Exit.Direction * 1100);
-
+                        NewSpawnedRoom->AddActorLocalRotation(FRotator(180.f, 0.f, 0.f));
                     }
+
+                    if (SpawnEngineRoom(NewSpawnedRoom, Exit, Entrance, EntranceIndex) == false)
+                    {
+                        continue;
+                    }
+
+                    FVector ToLocation = Entrance->ExitComponent->GetComponentLocation();
+
+                    FVector NewOffset = FromLocation - ToLocation;
+                    NewSpawnedRoom->AddActorWorldOffset(NewOffset);
+                    NewSpawnedRoom->AddActorWorldOffset(Exit.Direction * 1100);
+
+                    
 
                     TArray<FOverlapResult> Overlaps;
                     FCollisionQueryParams QueryParams;
@@ -185,7 +190,53 @@ void ARoomGenerator::BeginPlay()
 
 
     }
+
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+    int32 RandSpawnRoom = FMath::RandRange(0, SpawnedRooms.Num() - 1);
+
+    PlayerPawn->SetActorLocation(SpawnedRooms[RandSpawnRoom]->GetActorLocation());
 	
+    
+
+}
+
+bool ARoomGenerator::SpawnEngineRoom(ARoom* NewRoom, FRoomExit Exit, FRoomExit* Entrance, int32 Index)
+{
+    while (NewRoom->bIsEngine == true && !NewRoom->GetActorRotation().Equals(FRotator(0, 0, 0), 0.01f))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("DESTROY!!"))
+        if (NewRoom->ExitData.Num() > 0)
+        {
+            NewRoom->ExitData.RemoveAt(Index);
+            Index = FMath::RandRange(0, NewRoom->ExitData.Num() - 1);
+
+            float PitchDelta = FMath::FindDeltaAngleDegrees(
+                Exit.ExitComponent->GetForwardVector().Rotation().Pitch,
+                Entrance->ExitComponent->GetForwardVector().Rotation().Pitch);
+
+            NewRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0));
+
+            if (IsValid(Entrance->ExitComponent))
+            {
+                FVector ExitDir = Exit.ExitComponent->GetForwardVector().GetSafeNormal();
+                FVector EntranceDir = Entrance->ExitComponent->GetForwardVector().GetSafeNormal();
+
+                if (FVector::DotProduct(ExitDir, EntranceDir) > 0.99f)
+                {
+                    NewRoom->AddActorLocalRotation(FRotator(180.f, 0.f, 0.f));
+                }
+            }
+            continue;
+        }
+        else
+        {
+            NewRoom->Destroy();
+            return false;
+            break;
+        }
+    }
+    return true;
 }
 
 // Called every frame
@@ -218,108 +269,6 @@ void ARoomGenerator::FindDerivedBlueprints()
     }
 
     SpawnableClasses = UniqueSet.Array();
-/*
-    SpawnableClasses.Empty();
-
-    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-    FARFilter Filter;
-    Filter.ClassPaths.Add(UBlueprint::StaticClass()->GetClassPathName());
-    Filter.bRecursiveClasses = true;
-
-    TArray<FAssetData> AssetDataList;
-    AssetRegistryModule.Get().GetAssets(Filter, AssetDataList);
-
-    for (const FAssetData& AssetData : AssetDataList)
-    {
-        FString ParentClassPath;
-        if (!AssetData.GetTagValue(FName("ParentClass"), ParentClassPath))
-        {
-            continue;
-        }
-
-
-        // Clean up class path formatting
-        ParentClassPath.RemoveFromStart(TEXT("Class'"));
-        ParentClassPath.RemoveFromEnd(TEXT("'"));
-
-        UE_LOG(LogTemp, Warning, TEXT("added 1 class"))
-
-
-        UClass* ParentClass = LoadObject<UClass>(nullptr, *ParentClassPath);
-        if (ParentClass && ParentClass->IsChildOf(ARoom::StaticClass()))
-        {
-
-            UBlueprint* BlueprintAsset = Cast<UBlueprint>(AssetData.GetAsset());
-            if (BlueprintAsset && BlueprintAsset->GeneratedClass)
-            {
-
-                UClass* Class = BlueprintAsset->GeneratedClass;
-                if (Class && Class->IsChildOf(ARoom::StaticClass()))
-                {
-
-                    SpawnableClasses.Add(TSubclassOf<ARoom>(Class));
-                }
-            }
-        }
-    }
-*/
-/*
-
-    SpawnableClasses.Empty();
-
-    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-    FARFilter Filter;
-    Filter.PackagePaths.Add("/Game/My_Stuff");;
-    Filter.bRecursivePaths = true;
-    Filter.ClassPaths.Add(UBlueprint::StaticClass()->GetClassPathName());
-
-    TArray<FAssetData> AssetDataList;
-
-    AssetRegistryModule.Get().GetAssets(Filter, AssetDataList);
-
-    for (const FAssetData& AssetData : AssetDataList)
-    {
-
-        FString ParentClassPath;
-
-        if (!AssetData.GetTagValue("ParentClass", ParentClassPath))
-            continue;
-
-        // Clean up class path string
-        ParentClassPath.RemoveFromStart("Class'");
-        ParentClassPath.RemoveFromEnd("'");
-
-        UE_LOG(LogTemp, Warning, TEXT("Found BP: %s | Parent: %s"), *AssetData.AssetName.ToString(), *ParentClassPath);
-
-
-        UClass* ParentClass = LoadObject<UClass>(nullptr, *ParentClassPath);
-        if (!ParentClass || !ParentClass->IsChildOf(ARoom::StaticClass()))
-            continue;
-
-        UBlueprint* BlueprintAsset = Cast<UBlueprint>(AssetData.GetAsset());
-
-        if (!BlueprintAsset)
-        {
-            BlueprintAsset = LoadObject<UBlueprint>(nullptr, *AssetData.ToSoftObjectPath().ToString());
-        }
-
-        if (BlueprintAsset && BlueprintAsset->GeneratedClass)
-        {
-            UClass* Class = BlueprintAsset->GeneratedClass;
-            if (Class && Class->IsChildOf(ARoom::StaticClass()))
-            {
-                SpawnableClasses.Add(TSubclassOf<ARoom>(Class));
-            }
-        }
-
-    }
-
-
-    UE_LOG(LogTemp, Warning, TEXT("Found %d derived Blueprints"), SpawnableClasses.Num());
-    */
-
-    
-
 
 }
 

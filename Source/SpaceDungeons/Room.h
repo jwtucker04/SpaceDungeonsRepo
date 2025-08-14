@@ -49,6 +49,10 @@ public:
 
 	void CollectExits();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsEngine;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

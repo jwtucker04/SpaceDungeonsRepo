@@ -246,6 +246,10 @@ struct Z_Construct_UClass_ARoom_Statics
 		{ "Category", "Room" },
 		{ "ModuleRelativePath", "Room.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsEngine_MetaData[] = {
+		{ "Category", "Room" },
+		{ "ModuleRelativePath", "Room.h" },
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_BoxComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Mesh;
@@ -255,6 +259,8 @@ struct Z_Construct_UClass_ARoom_Statics
 	static const UECodeGen_Private::FArrayPropertyParams NewProp_ExitData;
 	static void NewProp_bOverlapped_SetBit(void* Obj);
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bOverlapped;
+	static void NewProp_bIsEngine_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bIsEngine;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -277,6 +283,11 @@ void Z_Construct_UClass_ARoom_Statics::NewProp_bOverlapped_SetBit(void* Obj)
 	((ARoom*)Obj)->bOverlapped = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_bOverlapped = { "bOverlapped", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(ARoom), &Z_Construct_UClass_ARoom_Statics::NewProp_bOverlapped_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bOverlapped_MetaData), NewProp_bOverlapped_MetaData) };
+void Z_Construct_UClass_ARoom_Statics::NewProp_bIsEngine_SetBit(void* Obj)
+{
+	((ARoom*)Obj)->bIsEngine = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_bIsEngine = { "bIsEngine", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(ARoom), &Z_Construct_UClass_ARoom_Statics::NewProp_bIsEngine_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsEngine_MetaData), NewProp_bIsEngine_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_ARoom_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_BoxComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_Mesh,
@@ -285,6 +296,7 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_ARoom_Sta
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_ExitData_Inner,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_ExitData,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_bOverlapped,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_bIsEngine,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_ARoom_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_ARoom_Statics::DependentSingletons[])() = {
@@ -326,10 +338,10 @@ struct Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDung
 		{ FRoomExit::StaticStruct, Z_Construct_UScriptStruct_FRoomExit_Statics::NewStructOps, TEXT("RoomExit"), &Z_Registration_Info_UScriptStruct_FRoomExit, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FRoomExit), 827923701U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_ARoom, ARoom::StaticClass, TEXT("ARoom"), &Z_Registration_Info_UClass_ARoom, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoom), 150462065U) },
+		{ Z_Construct_UClass_ARoom, ARoom::StaticClass, TEXT("ARoom"), &Z_Registration_Info_UClass_ARoom, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoom), 837383529U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_860946002(TEXT("/Script/SpaceDungeons"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_3673726368(TEXT("/Script/SpaceDungeons"),
 	Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ScriptStructInfo),
 	nullptr, 0);

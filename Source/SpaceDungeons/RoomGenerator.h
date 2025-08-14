@@ -44,6 +44,7 @@ public:
 
 	class ARoom* SpawnRandomClass();
 
+	bool SpawnEngineRoom(ARoom* NewRoom, struct FRoomExit Exit, struct FRoomExit* Entrance, int32 Index);
 
 
 };
