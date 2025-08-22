@@ -23,6 +23,18 @@ public:
 	int32 Index;
 };
 
+UENUM(BlueprintType)
+enum class ERoomType : uint8
+{
+	EMS_Normal UMETA(DisplayName = "Normal"),
+
+	EMS_Bridge UMETA(DisplayName = "Bridge"),
+	EMS_Engine UMETA(DisplayName = "Engine")
+
+
+
+};
+
 UCLASS()
 class SPACEDUNGEONS_API ARoom : public AActor
 {
@@ -31,6 +43,10 @@ class SPACEDUNGEONS_API ARoom : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ARoom();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enums")
+	ERoomType RoomType;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* BoxComp;
@@ -51,6 +67,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsEngine;
+
+	bool bIsBridge;
 
 
 protected:

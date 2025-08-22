@@ -30,13 +30,13 @@ struct FRoomExit;
 // ********** End ScriptStruct FRoomExit ***********************************************************
 
 // ********** Begin Class ARoom ********************************************************************
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_29_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_41_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execOnOverlapBegin);
 
 
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoom_NoRegister();
 
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_29_INCLASS_NO_PURE_DECLS \
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_41_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesARoom(); \
 	friend struct Z_Construct_UClass_ARoom_Statics; \
@@ -47,7 +47,7 @@ public: \
 	DECLARE_SERIALIZER(ARoom)
 
 
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_29_ENHANCED_CONSTRUCTORS \
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_41_ENHANCED_CONSTRUCTORS \
 	/** Deleted move- and copy-constructors, should never be used */ \
 	ARoom(ARoom&&) = delete; \
 	ARoom(const ARoom&) = delete; \
@@ -57,13 +57,13 @@ public: \
 	NO_API virtual ~ARoom();
 
 
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_26_PROLOG
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_29_GENERATED_BODY \
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_38_PROLOG
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_41_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_29_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_29_INCLASS_NO_PURE_DECLS \
-	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_29_ENHANCED_CONSTRUCTORS \
+	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_41_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_41_INCLASS_NO_PURE_DECLS \
+	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h_41_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
@@ -74,5 +74,16 @@ class ARoom;
 
 #undef CURRENT_FILE_ID
 #define CURRENT_FILE_ID FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h
+
+// ********** Begin Enum ERoomType *****************************************************************
+#define FOREACH_ENUM_EROOMTYPE(op) \
+	op(ERoomType::EMS_Normal) \
+	op(ERoomType::EMS_Bridge) \
+	op(ERoomType::EMS_Engine) 
+
+enum class ERoomType : uint8;
+template<> struct TIsUEnumClass<ERoomType> { enum { Value = true }; };
+template<> SPACEDUNGEONS_API UEnum* StaticEnum<ERoomType>();
+// ********** End Enum ERoomType *******************************************************************
 
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

@@ -157,7 +157,6 @@
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/__ExternalActors__/My_Stuff/Maps/TestSlate/1/K3/4TPQJVTBV9QE1DCX2J0L8J.uasset",
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/__ExternalActors__/My_Stuff/Maps/TestSlate/2/7Q/TOFZRRRIVZ65AJPXICAVBI.uasset",
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/My_Stuff/Maps/TestSlate.umap",
-				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/__ExternalActors__/My_Stuff/Maps/TestSlate/6/7H/R89X0C2ABJ8BWL6FHXURZG.uasset",
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/__ExternalActors__/My_Stuff/Maps/TestSlate/5/7L/YQCEI2PJXW5S06UC1G8Z01.uasset",
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/__ExternalActors__/My_Stuff/Maps/TestSlate/4/F8/PNCYO3K5M3KDFCHATB8QV8.uasset",
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/__ExternalActors__/My_Stuff/Maps/TestSlate/C/I0/WKE89HDDLLNTR5PUKPOFOL.uasset",
@@ -168,7 +167,12 @@
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/Geometry/Meshes/CubeMaterial.uasset",
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/My_Stuff/Rooms/EngineRoomPass1.uasset",
 				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/StarterContent/Materials/M_Basic_Wall.uasset",
-				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/StarterContent/Blueprints/Blueprint_CeilingLight.uasset"
+				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/StarterContent/Blueprints/Blueprint_CeilingLight.uasset",
+				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/ThirdPersonCPP/Maps/ThirdPersonExampleMap.umap",
+				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/My_Stuff/Rooms/BridgeFinished.uasset",
+				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/My_Stuff/MyBlueprints/BridgeRoom.uasset",
+				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/StarterContent/Particles/P_Ambient_Dust.uasset",
+				"C:/Users/jwtuc/Documents/Unreal Projects/SpaceDungeons 5.6/Content/__ExternalActors__/My_Stuff/Maps/TestSlate/6/7H/R89X0C2ABJ8BWL6FHXURZG.uasset"
 			]
 		}
 	]

@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Room.h"
+
 #include "RoomGenerator.generated.h"
+
+class ARoom;
 
 UCLASS()
 class SPACEDUNGEONS_API ARoomGenerator : public AActor
@@ -16,7 +20,7 @@ public:
 	ARoomGenerator();
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-	TSubclassOf<class ARoom> RoomClass;
+	TSubclassOf<ARoom> RoomClass;
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,15 +40,20 @@ public:
 	FRotator EntranceRotation;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-	TArray<TSubclassOf<class ARoom>> SpawnableClasses;
+	TArray<TSubclassOf<ARoom>> SpawnableClasses;
 
-	TArray<class ARoom*> SpawnedRooms;
+	TArray<ARoom*> SpawnedRooms;
 
 	void FindDerivedBlueprints();
 
-	class ARoom* SpawnRandomClass();
+	bool bHasBridge;
 
-	bool SpawnEngineRoom(ARoom* NewRoom, struct FRoomExit Exit, struct FRoomExit* Entrance, int32 Index);
+	ARoom* SpawnRandomClass();
+
+	UFUNCTION()
+	ARoom* SpawnSpecificRoom(ERoomType RoomType);//ARoom* NewRoom, ARoom* SpawnedRoom, struct FRoomExit Exit, struct FRoomExit* Entrance);
+
+	bool CanSpawnEngineRoom(ARoom* NewRoom, struct FRoomExit Exit, USceneComponent* Entrance, int32 Index);
 
 
 };

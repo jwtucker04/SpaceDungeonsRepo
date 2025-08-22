@@ -23,6 +23,7 @@ ENGINE_API UClass* Z_Construct_UClass_UStaticMeshComponent_NoRegister();
 ENGINE_API UScriptStruct* Z_Construct_UScriptStruct_FHitResult();
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoom();
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoom_NoRegister();
+SPACEDUNGEONS_API UEnum* Z_Construct_UEnum_SpaceDungeons_ERoomType();
 SPACEDUNGEONS_API UScriptStruct* Z_Construct_UScriptStruct_FRoomExit();
 UPackage* Z_Construct_UPackage__Script_SpaceDungeons();
 // ********** End Cross Module References **********************************************************
@@ -96,6 +97,63 @@ UScriptStruct* Z_Construct_UScriptStruct_FRoomExit()
 	return Z_Registration_Info_UScriptStruct_FRoomExit.InnerSingleton;
 }
 // ********** End ScriptStruct FRoomExit ***********************************************************
+
+// ********** Begin Enum ERoomType *****************************************************************
+static FEnumRegistrationInfo Z_Registration_Info_UEnum_ERoomType;
+static UEnum* ERoomType_StaticEnum()
+{
+	if (!Z_Registration_Info_UEnum_ERoomType.OuterSingleton)
+	{
+		Z_Registration_Info_UEnum_ERoomType.OuterSingleton = GetStaticEnum(Z_Construct_UEnum_SpaceDungeons_ERoomType, (UObject*)Z_Construct_UPackage__Script_SpaceDungeons(), TEXT("ERoomType"));
+	}
+	return Z_Registration_Info_UEnum_ERoomType.OuterSingleton;
+}
+template<> SPACEDUNGEONS_API UEnum* StaticEnum<ERoomType>()
+{
+	return ERoomType_StaticEnum();
+}
+struct Z_Construct_UEnum_SpaceDungeons_ERoomType_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Enum_MetaDataParams[] = {
+		{ "BlueprintType", "true" },
+		{ "EMS_Bridge.DisplayName", "Bridge" },
+		{ "EMS_Bridge.Name", "ERoomType::EMS_Bridge" },
+		{ "EMS_Engine.DisplayName", "Engine" },
+		{ "EMS_Engine.Name", "ERoomType::EMS_Engine" },
+		{ "EMS_Normal.DisplayName", "Normal" },
+		{ "EMS_Normal.Name", "ERoomType::EMS_Normal" },
+		{ "ModuleRelativePath", "Room.h" },
+	};
+#endif // WITH_METADATA
+	static constexpr UECodeGen_Private::FEnumeratorParam Enumerators[] = {
+		{ "ERoomType::EMS_Normal", (int64)ERoomType::EMS_Normal },
+		{ "ERoomType::EMS_Bridge", (int64)ERoomType::EMS_Bridge },
+		{ "ERoomType::EMS_Engine", (int64)ERoomType::EMS_Engine },
+	};
+	static const UECodeGen_Private::FEnumParams EnumParams;
+};
+const UECodeGen_Private::FEnumParams Z_Construct_UEnum_SpaceDungeons_ERoomType_Statics::EnumParams = {
+	(UObject*(*)())Z_Construct_UPackage__Script_SpaceDungeons,
+	nullptr,
+	"ERoomType",
+	"ERoomType",
+	Z_Construct_UEnum_SpaceDungeons_ERoomType_Statics::Enumerators,
+	RF_Public|RF_Transient|RF_MarkAsNative,
+	UE_ARRAY_COUNT(Z_Construct_UEnum_SpaceDungeons_ERoomType_Statics::Enumerators),
+	EEnumFlags::None,
+	(uint8)UEnum::ECppForm::EnumClass,
+	METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UEnum_SpaceDungeons_ERoomType_Statics::Enum_MetaDataParams), Z_Construct_UEnum_SpaceDungeons_ERoomType_Statics::Enum_MetaDataParams)
+};
+UEnum* Z_Construct_UEnum_SpaceDungeons_ERoomType()
+{
+	if (!Z_Registration_Info_UEnum_ERoomType.InnerSingleton)
+	{
+		UECodeGen_Private::ConstructUEnum(Z_Registration_Info_UEnum_ERoomType.InnerSingleton, Z_Construct_UEnum_SpaceDungeons_ERoomType_Statics::EnumParams);
+	}
+	return Z_Registration_Info_UEnum_ERoomType.InnerSingleton;
+}
+// ********** End Enum ERoomType *******************************************************************
 
 // ********** Begin Class ARoom Function OnOverlapBegin ********************************************
 struct Z_Construct_UFunction_ARoom_OnOverlapBegin_Statics
@@ -223,6 +281,10 @@ struct Z_Construct_UClass_ARoom_Statics
 		{ "IncludePath", "Room.h" },
 		{ "ModuleRelativePath", "Room.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_RoomType_MetaData[] = {
+		{ "Category", "Enums" },
+		{ "ModuleRelativePath", "Room.h" },
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BoxComp_MetaData[] = {
 		{ "Category", "Room" },
 		{ "EditInline", "true" },
@@ -251,6 +313,8 @@ struct Z_Construct_UClass_ARoom_Statics
 		{ "ModuleRelativePath", "Room.h" },
 	};
 #endif // WITH_METADATA
+	static const UECodeGen_Private::FBytePropertyParams NewProp_RoomType_Underlying;
+	static const UECodeGen_Private::FEnumPropertyParams NewProp_RoomType;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_BoxComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Mesh;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Exits_Inner;
@@ -272,6 +336,8 @@ struct Z_Construct_UClass_ARoom_Statics
 	};
 	static const UECodeGen_Private::FClassParams ClassParams;
 };
+const UECodeGen_Private::FBytePropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_RoomType_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FEnumPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_RoomType = { "RoomType", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ARoom, RoomType), Z_Construct_UEnum_SpaceDungeons_ERoomType, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_RoomType_MetaData), NewProp_RoomType_MetaData) }; // 986006208
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_BoxComp = { "BoxComp", nullptr, (EPropertyFlags)0x001000000008000d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ARoom, BoxComp), Z_Construct_UClass_UBoxComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BoxComp_MetaData), NewProp_BoxComp_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_Mesh = { "Mesh", nullptr, (EPropertyFlags)0x001000000008000d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ARoom, Mesh), Z_Construct_UClass_UStaticMeshComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Mesh_MetaData), NewProp_Mesh_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_Exits_Inner = { "Exits", nullptr, (EPropertyFlags)0x00000000000a0008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_USceneComponent_NoRegister, METADATA_PARAMS(0, nullptr) };
@@ -289,6 +355,8 @@ void Z_Construct_UClass_ARoom_Statics::NewProp_bIsEngine_SetBit(void* Obj)
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_ARoom_Statics::NewProp_bIsEngine = { "bIsEngine", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(ARoom), &Z_Construct_UClass_ARoom_Statics::NewProp_bIsEngine_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsEngine_MetaData), NewProp_bIsEngine_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_ARoom_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_RoomType_Underlying,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_RoomType,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_BoxComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_Mesh,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoom_Statics::NewProp_Exits_Inner,
@@ -334,17 +402,20 @@ ARoom::~ARoom() {}
 // ********** Begin Registration *******************************************************************
 struct Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics
 {
+	static constexpr FEnumRegisterCompiledInInfo EnumInfo[] = {
+		{ ERoomType_StaticEnum, TEXT("ERoomType"), &Z_Registration_Info_UEnum_ERoomType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 986006208U) },
+	};
 	static constexpr FStructRegisterCompiledInInfo ScriptStructInfo[] = {
 		{ FRoomExit::StaticStruct, Z_Construct_UScriptStruct_FRoomExit_Statics::NewStructOps, TEXT("RoomExit"), &Z_Registration_Info_UScriptStruct_FRoomExit, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FRoomExit), 827923701U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_ARoom, ARoom::StaticClass, TEXT("ARoom"), &Z_Registration_Info_UClass_ARoom, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoom), 837383529U) },
+		{ Z_Construct_UClass_ARoom, ARoom::StaticClass, TEXT("ARoom"), &Z_Registration_Info_UClass_ARoom, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoom), 3756531010U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_3673726368(TEXT("/Script/SpaceDungeons"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_2450815611(TEXT("/Script/SpaceDungeons"),
 	Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::ScriptStructInfo),
-	nullptr, 0);
+	Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_Room_h__Script_SpaceDungeons_Statics::EnumInfo));
 // ********** End Registration *********************************************************************
 
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
