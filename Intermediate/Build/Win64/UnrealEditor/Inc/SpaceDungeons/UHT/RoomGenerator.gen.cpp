@@ -138,12 +138,18 @@ struct Z_Construct_UClass_ARoomGenerator_Statics
 		{ "Category", "Spawning" },
 		{ "ModuleRelativePath", "RoomGenerator.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SpawnedRooms_MetaData[] = {
+		{ "Category", "Spawning" },
+		{ "ModuleRelativePath", "RoomGenerator.h" },
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FClassPropertyParams NewProp_RoomClass;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_ExitRotation;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_EntranceRotation;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_SpawnableClasses_Inner;
 	static const UECodeGen_Private::FArrayPropertyParams NewProp_SpawnableClasses;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_SpawnedRooms_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_SpawnedRooms;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -160,12 +166,16 @@ const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ARoomGenerator
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_ARoomGenerator_Statics::NewProp_EntranceRotation = { "EntranceRotation", nullptr, (EPropertyFlags)0x0010000000000001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ARoomGenerator, EntranceRotation), Z_Construct_UScriptStruct_FRotator, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EntranceRotation_MetaData), NewProp_EntranceRotation_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnableClasses_Inner = { "SpawnableClasses", nullptr, (EPropertyFlags)0x0004000000000000, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_UClass, Z_Construct_UClass_ARoom_NoRegister, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnableClasses = { "SpawnableClasses", nullptr, (EPropertyFlags)0x0014000000000001, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ARoomGenerator, SpawnableClasses), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SpawnableClasses_MetaData), NewProp_SpawnableClasses_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnedRooms_Inner = { "SpawnedRooms", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_ARoom_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnedRooms = { "SpawnedRooms", nullptr, (EPropertyFlags)0x0010000000000001, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(ARoomGenerator, SpawnedRooms), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SpawnedRooms_MetaData), NewProp_SpawnedRooms_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_ARoomGenerator_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoomGenerator_Statics::NewProp_RoomClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoomGenerator_Statics::NewProp_ExitRotation,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoomGenerator_Statics::NewProp_EntranceRotation,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnableClasses_Inner,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnableClasses,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnedRooms_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ARoomGenerator_Statics::NewProp_SpawnedRooms,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_ARoomGenerator_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_ARoomGenerator_Statics::DependentSingletons[])() = {
@@ -204,10 +214,10 @@ ARoomGenerator::~ARoomGenerator() {}
 struct Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_ARoomGenerator, ARoomGenerator::StaticClass, TEXT("ARoomGenerator"), &Z_Registration_Info_UClass_ARoomGenerator, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoomGenerator), 176160935U) },
+		{ Z_Construct_UClass_ARoomGenerator, ARoomGenerator::StaticClass, TEXT("ARoomGenerator"), &Z_Registration_Info_UClass_ARoomGenerator, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoomGenerator), 1568433381U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_1903646079(TEXT("/Script/SpaceDungeons"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_3137783633(TEXT("/Script/SpaceDungeons"),
 	Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);
