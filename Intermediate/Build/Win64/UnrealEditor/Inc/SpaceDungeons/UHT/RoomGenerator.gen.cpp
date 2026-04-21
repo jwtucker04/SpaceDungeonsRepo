@@ -18,67 +18,12 @@ ENGINE_API UClass* Z_Construct_UClass_AActor();
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoom_NoRegister();
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoomGenerator();
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoomGenerator_NoRegister();
-SPACEDUNGEONS_API UEnum* Z_Construct_UEnum_SpaceDungeons_ERoomType();
 UPackage* Z_Construct_UPackage__Script_SpaceDungeons();
 // ********** End Cross Module References **********************************************************
-
-// ********** Begin Class ARoomGenerator Function SpawnSpecificRoom ********************************
-struct Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics
-{
-	struct RoomGenerator_eventSpawnSpecificRoom_Parms
-	{
-		ERoomType RoomType;
-		ARoom* ReturnValue;
-	};
-#if WITH_METADATA
-	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
-		{ "ModuleRelativePath", "RoomGenerator.h" },
-	};
-#endif // WITH_METADATA
-	static const UECodeGen_Private::FBytePropertyParams NewProp_RoomType_Underlying;
-	static const UECodeGen_Private::FEnumPropertyParams NewProp_RoomType;
-	static const UECodeGen_Private::FObjectPropertyParams NewProp_ReturnValue;
-	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
-	static const UECodeGen_Private::FFunctionParams FuncParams;
-};
-const UECodeGen_Private::FBytePropertyParams Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::NewProp_RoomType_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
-const UECodeGen_Private::FEnumPropertyParams Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::NewProp_RoomType = { "RoomType", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RoomGenerator_eventSpawnSpecificRoom_Parms, RoomType), Z_Construct_UEnum_SpaceDungeons_ERoomType, METADATA_PARAMS(0, nullptr) }; // 986006208
-const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RoomGenerator_eventSpawnSpecificRoom_Parms, ReturnValue), Z_Construct_UClass_ARoom_NoRegister, METADATA_PARAMS(0, nullptr) };
-const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::PropPointers[] = {
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::NewProp_RoomType_Underlying,
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::NewProp_RoomType,
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::NewProp_ReturnValue,
-};
-static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::PropPointers) < 2048);
-const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::FuncParams = { { (UObject*(*)())Z_Construct_UClass_ARoomGenerator, nullptr, "SpawnSpecificRoom", Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::PropPointers), sizeof(Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::RoomGenerator_eventSpawnSpecificRoom_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::Function_MetaDataParams), Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::Function_MetaDataParams)},  };
-static_assert(sizeof(Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::RoomGenerator_eventSpawnSpecificRoom_Parms) < MAX_uint16);
-UFunction* Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom()
-{
-	static UFunction* ReturnFunction = nullptr;
-	if (!ReturnFunction)
-	{
-		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom_Statics::FuncParams);
-	}
-	return ReturnFunction;
-}
-DEFINE_FUNCTION(ARoomGenerator::execSpawnSpecificRoom)
-{
-	P_GET_ENUM(ERoomType,Z_Param_RoomType);
-	P_FINISH;
-	P_NATIVE_BEGIN;
-	*(ARoom**)Z_Param__Result=P_THIS->SpawnSpecificRoom(ERoomType(Z_Param_RoomType));
-	P_NATIVE_END;
-}
-// ********** End Class ARoomGenerator Function SpawnSpecificRoom **********************************
 
 // ********** Begin Class ARoomGenerator ***********************************************************
 void ARoomGenerator::StaticRegisterNativesARoomGenerator()
 {
-	UClass* Class = ARoomGenerator::StaticClass();
-	static const FNameNativePtrPair Funcs[] = {
-		{ "SpawnSpecificRoom", &ARoomGenerator::execSpawnSpecificRoom },
-	};
-	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
 }
 FClassRegistrationInfo Z_Registration_Info_UClass_ARoomGenerator;
 UClass* ARoomGenerator::GetPrivateStaticClass()
@@ -152,10 +97,6 @@ struct Z_Construct_UClass_ARoomGenerator_Statics
 	static const UECodeGen_Private::FArrayPropertyParams NewProp_SpawnedRooms;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
-	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
-		{ &Z_Construct_UFunction_ARoomGenerator_SpawnSpecificRoom, "SpawnSpecificRoom" }, // 2764591104
-	};
-	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
 		TCppClassTypeTraits<ARoomGenerator>::IsAbstract,
 	};
@@ -188,11 +129,11 @@ const UECodeGen_Private::FClassParams Z_Construct_UClass_ARoomGenerator_Statics:
 	"Engine",
 	&StaticCppClassTypeInfo,
 	DependentSingletons,
-	FuncInfo,
+	nullptr,
 	Z_Construct_UClass_ARoomGenerator_Statics::PropPointers,
 	nullptr,
 	UE_ARRAY_COUNT(DependentSingletons),
-	UE_ARRAY_COUNT(FuncInfo),
+	0,
 	UE_ARRAY_COUNT(Z_Construct_UClass_ARoomGenerator_Statics::PropPointers),
 	0,
 	0x009001A4u,
@@ -214,10 +155,10 @@ ARoomGenerator::~ARoomGenerator() {}
 struct Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_ARoomGenerator, ARoomGenerator::StaticClass, TEXT("ARoomGenerator"), &Z_Registration_Info_UClass_ARoomGenerator, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoomGenerator), 1568433381U) },
+		{ Z_Construct_UClass_ARoomGenerator, ARoomGenerator::StaticClass, TEXT("ARoomGenerator"), &Z_Registration_Info_UClass_ARoomGenerator, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ARoomGenerator), 1640472408U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_3137783633(TEXT("/Script/SpaceDungeons"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_117099469(TEXT("/Script/SpaceDungeons"),
 	Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h__Script_SpaceDungeons_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

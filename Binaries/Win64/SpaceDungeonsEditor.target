@@ -28684,6 +28684,10 @@
 			"Type": "UFS"
 		},
 		{
+			"Path": "$(ProjectDir)/Plugins/PLuginTest/PLuginTest.uplugin",
+			"Type": "UFS"
+		},
+		{
 			"Path": "$(ProjectDir)/SpaceDungeons.uproject",
 			"Type": "UFS"
 		}
@@ -28834,6 +28838,7 @@
 		"OnlineSubsystemNull",
 		"OnlineSubsystemUtils",
 		"OodleNetwork",
+		"PLuginTest",
 		"Paper2D",
 		"PerforceSourceControl",
 		"PixWinPlugin",

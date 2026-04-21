@@ -7,6 +7,7 @@
 #include "Components/ArrowComponent.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Engine/EngineTypes.h"
+#include "Components/SceneComponent.h"
 
 // Sets default values
 ARoom::ARoom()
@@ -14,11 +15,14 @@ ARoom::ARoom()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
-	RootComponent = BoxComp;
+	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
+	RootComponent = RootComp;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+
+	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	BoxComp->SetupAttachment(RootComponent);
 
 	bOverlapped = false;
 }

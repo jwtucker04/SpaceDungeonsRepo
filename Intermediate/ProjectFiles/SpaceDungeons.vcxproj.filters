@@ -55,6 +55,12 @@
     <ClInclude Include="..\..\Source\SpaceDungeons\RoomGenerator.h">
       <Filter>Source\SpaceDungeons</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\SpaceDungeons\ShipConvexHull.cpp">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\SpaceDungeons\ShipConvexHull.h">
+      <Filter>Source\SpaceDungeons</Filter>
+    </ClInclude>
     <None Include="..\..\Source\SpaceDungeons\SpaceDungeons.Build.cs">
       <Filter>Source\SpaceDungeons</Filter>
     </None>

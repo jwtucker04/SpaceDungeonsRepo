@@ -16,14 +16,7 @@
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
-class ARoom;
-enum class ERoomType : uint8;
-
 // ********** Begin Class ARoomGenerator ***********************************************************
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
-	DECLARE_FUNCTION(execSpawnSpecificRoom);
-
-
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoomGenerator_NoRegister();
 
 #define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_INCLASS_NO_PURE_DECLS \
@@ -51,7 +44,6 @@ public: \
 #define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
 	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_INCLASS_NO_PURE_DECLS \
 	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_ENHANCED_CONSTRUCTORS \
 private: \

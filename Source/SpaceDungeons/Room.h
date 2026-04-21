@@ -47,6 +47,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enums")
 	ERoomType RoomType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* RootComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* BoxComp;

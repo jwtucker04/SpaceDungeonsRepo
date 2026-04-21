@@ -17,6 +17,8 @@
 #include "Engine/OverlapResult.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Pawn.h"
+#include "ShipConvexHull.h"
+
 
 // Sets default values
 ARoomGenerator::ARoomGenerator()
@@ -28,248 +30,75 @@ ARoomGenerator::ARoomGenerator()
 
 }
 
+void ARoomGenerator::FindDerivedBlueprints()
+{
+    SpawnableClasses.Empty();
+
+    TArray<AActor*> FoundRooms;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARoom::StaticClass(), FoundRooms);
+
+    TSet<TSubclassOf<ARoom>> UniqueSet;
+
+    for (AActor* Actor : FoundRooms)
+    {
+        if (ARoom* Room = Cast<ARoom>(Actor))
+        {
+            TSubclassOf<ARoom> FoundRoomClass = Room->GetClass();
+
+            if (FoundRoomClass)
+            {
+                UniqueSet.Add(FoundRoomClass);
+            }
+        }
+    }
+
+    SpawnableClasses = UniqueSet.Array();
+
+}
+
 // Called when the game starts or when spawned
 void ARoomGenerator::BeginPlay()
 {
 	Super::BeginPlay();
 
-    FActorSpawnParameters SpawnParams;
-    SpawnParams.Owner = this;
-    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FindDerivedBlueprints();
 
-    FVector SpawnLocation = FVector(0, 0, 0); // adjust as needed
-    FRotator SpawnRotation = FRotator(0, 0, 0);
-
-    //ARoom* SpawnedRoom = GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
-
-    FindDerivedBlueprints();
-    ARoom* SpawnedRoom = SpawnSpecificRoom(ERoomType::EMS_Bridge);
-    ARoom* NewSpawnedRoom;
-
-    for (int j = 0; j < 3; j++)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            if (SpawnedRoom)
-            {
-
-                SpawnedRoom->CollectExits();
-                TArray<FRoomExit> Exits = SpawnedRoom->ExitData;
-
-                TArray<ARoom*> FinalSpawnedRooms = SpawnedRooms;
-
-                while (Exits.Num() > 0)
-                {
-
-                    int32 ExitIndex = FMath::RandRange(0, Exits.Num() - 1);
-
-                    const FRoomExit Exit = Exits[ExitIndex];
-
-                    Exit.ExitComponent->SetHiddenInGame(false);
-
-                    if (i >= 2 && j >= 2)
-                    {
-                        NewSpawnedRoom = SpawnSpecificRoom(ERoomType::EMS_Engine);
-                    }
-                    else
-                    {
-                        NewSpawnedRoom = SpawnRandomClass();
-                    }
-
-                    
-                    //NewSpawnedRoom = GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
-                    NewSpawnedRoom->CollectExits();
-
-                    int32 EntranceIndex = FMath::RandRange(0, NewSpawnedRoom->ExitData.Num() - 1);
-                    FRoomExit* Entrance = &NewSpawnedRoom->ExitData[EntranceIndex];
-                    FVector FromLocation = FVector(0,0,0);
-
-                    int32 EngineCheckIterator = 100;
-
-                    Entrance->ExitComponent->SetHiddenInGame(false);
-
-                    // 2. Get info from the previous room's exit and the new room's entrance
-                    FromLocation = Exit.ExitComponent->GetComponentLocation();
-
-                    ExitRotation = Exit.ExitComponent->GetComponentRotation();
-                    EntranceRotation = Entrance->ExitComponent->GetComponentRotation();
-
-                    float PitchDelta = FMath::FindDeltaAngleDegrees(
-                        Exit.ExitComponent->GetForwardVector().Rotation().Pitch,
-                        Entrance->ExitComponent->GetForwardVector().Rotation().Pitch);
-
-                    NewSpawnedRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0));
-
-
-                    FVector ExitDir = Exit.ExitComponent->GetForwardVector().GetSafeNormal();
-                    FVector EntranceDir = Entrance->ExitComponent->GetForwardVector().GetSafeNormal();
-
-                    if (FVector::DotProduct(ExitDir, EntranceDir) > 0.99f)
-                    {
-                        NewSpawnedRoom->AddActorLocalRotation(FRotator(180.f, 0.f, 0.f));
-                    }
-
-                    if (j > 1)
-                    {
-                        UE_LOG(LogTemp, Warning, TEXT("SPAWNFINALENGINE"))
-                    }
-                    else
-                    {
-                        if (NewSpawnedRoom->RoomType == ERoomType::EMS_Engine)
-                        {
-                            NewSpawnedRoom->Destroy();
-                            continue;
-                        }
-                    }
-
-                    if (NewSpawnedRoom->RoomType == ERoomType::EMS_Engine && CanSpawnEngineRoom(NewSpawnedRoom, Exit, Entrance->ExitComponent, EntranceIndex) == false)
-                    {    
-                        if (i == 2 && j == 2)
-                        {
-                            Exits.RemoveAt(ExitIndex);
-
-                        }
-
-                        //break;     
-                        continue;
-                    }
-
-
-
-                    if (NewSpawnedRoom->RoomType == ERoomType::EMS_Bridge)
-                    {
-                        NewSpawnedRoom->Destroy();
-                        continue;
-                    }
-
-                    FVector ToLocation = Entrance->ExitComponent->GetComponentLocation();
-
-                    FVector NewOffset = FromLocation - ToLocation;
-
-                    if (NewSpawnedRoom->RoomType != ERoomType::EMS_Engine)
-                    {
-                        NewSpawnedRoom->AddActorWorldOffset(NewOffset);
-                        NewSpawnedRoom->AddActorWorldOffset(Exit.ExitComponent->GetForwardVector() * 1100);
-                    }
-
-                    
-
-                    TArray<FOverlapResult> Overlaps;
-                    FCollisionQueryParams QueryParams;
-                    QueryParams.AddIgnoredActor(NewSpawnedRoom);
-                    
-
-                    bool bOverlapping = GetWorld()->OverlapMultiByChannel(
-                        Overlaps,
-                        NewSpawnedRoom->BoxComp->GetComponentLocation(),
-                        NewSpawnedRoom->GetActorQuat(),
-                        ECC_WorldDynamic,
-                        FCollisionShape::MakeBox(NewSpawnedRoom->BoxComp->GetScaledBoxExtent()),
-                        QueryParams
-                    );
-                    
-                    
-                    if (bOverlapping)
-                    {
-                        Exits.RemoveAt(ExitIndex);
-
-                        NewSpawnedRoom->Destroy();
-
-                        if (Exits.Num() < 1)
-                        {
-                            int RandRoom = FMath::RandRange(0, SpawnedRooms.Num() - 1);
-
-                            if (SpawnedRooms.Num() > 0)
-                            {
-                                SpawnedRoom = SpawnedRooms[RandRoom];
-                                Exits = SpawnedRoom->ExitData;
-                            }
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        FActorSpawnParameters TunnelParams;
-                        TunnelParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-                        FRotator TunnelRotation = FRotator(0, 0, 180);
-
-                        AStaticMeshActor* Tunnel = nullptr;
-                            
-                        Tunnel = GetWorld()->SpawnActor<AStaticMeshActor>(FromLocation, TunnelRotation, TunnelParams);
-
-                        if (Tunnel)
-                        {
-                            
-                            // Load the mesh at runtime (replace with your mesh path!)
-                            UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/My_Stuff/Rooms/SpaceShipRoomsPass1_Tunnel.SpaceShipRoomsPass1_Tunnel")));
-                            if (Mesh)
-                            {
-                                Tunnel->GetStaticMeshComponent()->SetStaticMesh(Mesh);
-                                Tunnel->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable); // Optional
-
-                                Tunnel->AddActorLocalRotation(FRotator(Exit.ExitComponent->GetForwardVector().Rotation().Pitch, 0, 0));
-
-                                if (Exit.ExitComponent->GetForwardVector().Equals(Tunnel->GetActorForwardVector(), 1.f))
-                                {
-
-                                    Tunnel->AddActorLocalRotation(FRotator(180, 0, 0));
-                                }
-
-                                Tunnel->SetActorScale3D(FVector(2.3f)); 
-                            }
-                        }
-
-                        SpawnedRooms.Add(NewSpawnedRoom);
-
-                        SpawnedRoom = NewSpawnedRoom;
-                        break;
-                    }
-
-                }
-
-            }
-        }
-
-        int RandRoom = FMath::RandRange(0, SpawnedRooms.Num()-1);
-
-        
-        if (SpawnedRooms.Num() > 0)
-        {
-            SpawnedRoom = SpawnedRooms[RandRoom];
-        }
-
-
-    }
-
-    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-
-    int32 RandSpawnRoom = FMath::RandRange(0, SpawnedRooms.Num() - 1);
-
-    if (SpawnedRooms.Num() > 0)
-    {
-        PlayerPawn->SetActorLocation(SpawnedRooms[RandSpawnRoom]->GetActorLocation());
-    }
-    
+   // SpawnTypeBranches NewBranches(SpawnableClasses, GetWorld(), nullptr, SpawnedRooms);
+	SpawnTypeCA NewCase(SpawnableClasses, GetWorld());
 
 }
 
-ARoom* ARoomGenerator::SpawnSpecificRoom(ERoomType RoomType)  
+// Called every frame
+void ARoomGenerator::Tick(float DeltaTime)
 {
-    ARoom* Room = SpawnRandomClass();
-    while (Room->RoomType != RoomType)
-    {
-        Room->Destroy();
+	Super::Tick(DeltaTime);
 
-        Room = SpawnRandomClass();
-    }
-
-    return Room;
 }
 
-bool ARoomGenerator::CanSpawnEngineRoom(ARoom* NewRoom, FRoomExit Exit, USceneComponent* Entrance, int32 Index)
-{  
-    
+
+ARoom* SpawnTypeClass::SpawnRandomClass()
+{
+    if (SpawnableClasses.Num() > 0)
+    {
+        int32 Index = FMath::RandRange(0, SpawnableClasses.Num() - 1);
+        TSubclassOf<ARoom> ClassToSpawn = SpawnableClasses[Index];
+
+        if (ClassToSpawn)
+        {
+            FActorSpawnParameters SpawnParams;
+            FVector Location = FVector(0); // Or any location
+            FRotator Rotation = FRotator(0);
+
+            return world->SpawnActor<ARoom>(ClassToSpawn, Location, Rotation, SpawnParams);
+        }
+    }
+
+    return nullptr;
+}
+
+bool SpawnTypeClass::CanSpawnEngineRoom(ARoom* NewRoom, FRoomExit Exit, USceneComponent* Entrance, int32 Index)
+{
+
     for (int i = 0; i < NewRoom->ExitData.Num(); i++)
     {
         ARoom* TestRoom = SpawnSpecificRoom(ERoomType::EMS_Engine);
@@ -307,7 +136,7 @@ bool ARoomGenerator::CanSpawnEngineRoom(ARoom* NewRoom, FRoomExit Exit, USceneCo
         // Check if final rotation is valid
         if (TestRoom->GetActorRotation().Equals(FRotator::ZeroRotator, 0.1f))
         {
-            
+
             NewRoom->SetActorRotation(TestRoom->GetActorRotation());
             Entrance = NewEntrance;
             NewRoom->SetActorLocation(TestRoom->GetActorLocation());
@@ -315,7 +144,7 @@ bool ARoomGenerator::CanSpawnEngineRoom(ARoom* NewRoom, FRoomExit Exit, USceneCo
             return true; // success
         }
         TestRoom->Destroy();
-       
+
 
     }
 
@@ -324,59 +153,579 @@ bool ARoomGenerator::CanSpawnEngineRoom(ARoom* NewRoom, FRoomExit Exit, USceneCo
     return false;
 }
 
-// Called every frame
-void ARoomGenerator::Tick(float DeltaTime)
+SpawnTypeClass::SpawnTypeClass(UWorld* World, TArray<TSubclassOf<ARoom>> spawnableClasses)
 {
-	Super::Tick(DeltaTime);
-
+	world = World;
+    SpawnableClasses = spawnableClasses;
 }
 
-void ARoomGenerator::FindDerivedBlueprints()
+AStaticMeshActor* SpawnTypeClass::SpawnTunnel(FRoomExit Exit, FVector FromLocation)
 {
-    SpawnableClasses.Empty();
+    FActorSpawnParameters TunnelParams;
+    TunnelParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-    TArray<AActor*> FoundRooms;
-    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARoom::StaticClass(), FoundRooms);
+    FRotator TunnelRotation = FRotator(0, 0, 180);
 
-    TSet<TSubclassOf<ARoom>> UniqueSet;
+    AStaticMeshActor* Tunnel = nullptr;
 
-    for (AActor* Actor : FoundRooms)
+    Tunnel = world->SpawnActor<AStaticMeshActor>(FromLocation, TunnelRotation, TunnelParams);
+
+    if (Tunnel)
     {
-        if (ARoom* Room = Cast<ARoom>(Actor))
-        {
-            TSubclassOf<ARoom> FoundRoomClass = Room->GetClass();
 
-            if (FoundRoomClass)
+        // Load the mesh at runtime (replace with your mesh path!)
+        UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/My_Stuff/Rooms/SpaceShipRoomsPass1_Tunnel.SpaceShipRoomsPass1_Tunnel")));
+        if (Mesh)
+        {
+            Tunnel->GetStaticMeshComponent()->SetStaticMesh(Mesh);
+            Tunnel->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable); // Optional
+
+            Tunnel->AddActorLocalRotation(FRotator(Exit.ExitComponent->GetForwardVector().Rotation().Pitch, 0, 0));
+
+            if (Exit.ExitComponent->GetForwardVector().Equals(Tunnel->GetActorForwardVector(), 1.f))
             {
-                UniqueSet.Add(FoundRoomClass);
+
+                Tunnel->AddActorLocalRotation(FRotator(180, 0, 0));
+            }
+
+            Tunnel->SetActorScale3D(FVector(2.3f));
+            return Tunnel;
+        }
+    }
+    return nullptr;
+}
+SpawnTypeBranches::SpawnTypeBranches(TArray<TSubclassOf<ARoom>> SpawnableClasses, UWorld* _World, ARoom* spawnedRoom, TArray<ARoom*> SpawnedRooms) : SpawnTypeClass(_World, SpawnableClasses)
+{
+
+    FActorSpawnParameters SpawnParams;
+ //   SpawnParams.Owner = this;
+    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    FVector SpawnLocation = FVector(0, 0, 0); // adjust as needed
+    FRotator SpawnRotation = FRotator(0, 0, 0);
+
+    //ARoom* SpawnedRoom = GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
+ 
+// -> replace ->    ARoom* SpawnedRoom = SpawnSpecificRoom(ERoomType::EMS_Bridge);
+    ARoom* SpawnedRoom = SpawnSpecificRoom(ERoomType::EMS_Bridge);
+    ARoom* NewSpawnedRoom;
+
+    for (int j = 0; j < 3; j++)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (SpawnedRoom)
+            {
+
+                SpawnedRoom->CollectExits();
+                TArray<FRoomExit> Exits = SpawnedRoom->ExitData;
+
+                TArray<ARoom*> FinalSpawnedRooms = SpawnedRooms;
+
+                while (Exits.Num() > 0)
+                {
+
+                    int32 ExitIndex = FMath::RandRange(0, Exits.Num() - 1);
+
+                    const FRoomExit Exit = Exits[ExitIndex];
+
+                    Exit.ExitComponent->SetHiddenInGame(false);
+
+                    if (i >= 2 && j >= 2)
+                    {
+                        NewSpawnedRoom = SpawnSpecificRoom(ERoomType::EMS_Engine);
+                    }
+                    else
+                    {
+                        NewSpawnedRoom = SpawnRandomClass();
+                    }
+
+
+                    //NewSpawnedRoom = GetWorld()->SpawnActor<ARoom>(RoomClass, SpawnLocation, SpawnRotation, SpawnParams);
+                    NewSpawnedRoom->CollectExits();
+
+                    int32 EntranceIndex = FMath::RandRange(0, NewSpawnedRoom->ExitData.Num() - 1);
+                    FRoomExit* Entrance = &NewSpawnedRoom->ExitData[EntranceIndex];
+                    FVector FromLocation = FVector(0, 0, 0);
+
+                    int32 EngineCheckIterator = 100;
+
+                    Entrance->ExitComponent->SetHiddenInGame(false);
+
+                    FromLocation = Exit.ExitComponent->GetComponentLocation();
+
+                    FRotator ExitRotation = Exit.ExitComponent->GetComponentRotation();
+                    FRotator EntranceRotation = Entrance->ExitComponent->GetComponentRotation();
+
+                    float PitchDelta = FMath::FindDeltaAngleDegrees(
+                        Exit.ExitComponent->GetForwardVector().Rotation().Pitch,
+                        Entrance->ExitComponent->GetForwardVector().Rotation().Pitch);
+
+                    NewSpawnedRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0));
+
+                    FVector ExitDir = Exit.ExitComponent->GetForwardVector().GetSafeNormal();
+                    FVector EntranceDir = Entrance->ExitComponent->GetForwardVector().GetSafeNormal();
+
+                    if (FVector::DotProduct(ExitDir, EntranceDir) > 0.99f)
+                    {
+                        NewSpawnedRoom->AddActorLocalRotation(FRotator(180.f, 0.f, 0.f));
+                    }
+
+                    if (j > 1)
+                    {
+                        UE_LOG(LogTemp, Warning, TEXT("SPAWNFINALENGINES"))
+                    }
+                    else
+                    {
+                        if (NewSpawnedRoom->RoomType == ERoomType::EMS_Engine)
+                        {
+                            NewSpawnedRoom->Destroy();
+                            continue;
+                        }
+                    }
+
+                    if (NewSpawnedRoom->RoomType == ERoomType::EMS_Engine && CanSpawnEngineRoom(NewSpawnedRoom, Exit, Entrance->ExitComponent, EntranceIndex) == false)
+                    {
+                        if (i == 2 && j == 2)
+                        {
+                            Exits.RemoveAt(ExitIndex);
+
+                        }
+                        continue;
+                    }
+
+                    if (NewSpawnedRoom->RoomType == ERoomType::EMS_Bridge)
+                    {
+                        NewSpawnedRoom->Destroy();
+                        continue;
+                    }
+
+                    FVector ToLocation = Entrance->ExitComponent->GetComponentLocation();
+
+                    FVector NewOffset = FromLocation - ToLocation;
+
+                    if (NewSpawnedRoom->RoomType != ERoomType::EMS_Engine)
+                    {
+                        NewSpawnedRoom->AddActorWorldOffset(NewOffset);
+                        NewSpawnedRoom->AddActorWorldOffset(Exit.ExitComponent->GetForwardVector() * 1100);
+                    }
+
+
+
+                    TArray<FOverlapResult> Overlaps;
+                    FCollisionQueryParams QueryParams;
+                    QueryParams.AddIgnoredActor(NewSpawnedRoom);
+
+
+                    bool bOverlapping = world->OverlapMultiByChannel(
+                        Overlaps,
+                        NewSpawnedRoom->BoxComp->GetComponentLocation(),
+                        NewSpawnedRoom->GetActorQuat(),
+                        ECC_WorldDynamic,
+                        FCollisionShape::MakeBox(NewSpawnedRoom->BoxComp->GetScaledBoxExtent()),
+                        QueryParams
+                    );
+
+
+                    if (bOverlapping)
+                    {
+                        Exits.RemoveAt(ExitIndex);
+
+                        NewSpawnedRoom->Destroy();
+
+                        if (Exits.Num() < 1)
+                        {
+                            int RandRoom = FMath::RandRange(0, SpawnedRooms.Num() - 1);
+
+                            if (SpawnedRooms.Num() > 0)
+                            {
+                                SpawnedRoom = SpawnedRooms[RandRoom];
+                                Exits = SpawnedRoom->ExitData;
+                            }
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        FActorSpawnParameters TunnelParams;
+                        TunnelParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+                        FRotator TunnelRotation = FRotator(0, 0, 180);
+
+                        AStaticMeshActor* Tunnel = nullptr;
+
+                        Tunnel = world->SpawnActor<AStaticMeshActor>(FromLocation, TunnelRotation, TunnelParams);
+
+                        if (Tunnel)
+                        {
+
+                            // Load the mesh at runtime (replace with your mesh path!)
+                            UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/My_Stuff/Rooms/SpaceShipRoomsPass1_Tunnel.SpaceShipRoomsPass1_Tunnel")));
+                            if (Mesh)
+                            {
+                                Tunnel->GetStaticMeshComponent()->SetStaticMesh(Mesh);
+                                Tunnel->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable); // Optional
+
+                                Tunnel->AddActorLocalRotation(FRotator(Exit.ExitComponent->GetForwardVector().Rotation().Pitch, 0, 0));
+
+                                if (Exit.ExitComponent->GetForwardVector().Equals(Tunnel->GetActorForwardVector(), 1.f))
+                                {
+
+                                    Tunnel->AddActorLocalRotation(FRotator(180, 0, 0));
+                                }
+
+                                Tunnel->SetActorScale3D(FVector(2.3f));
+                            }
+                        }
+
+                        SpawnedRooms.Add(NewSpawnedRoom);
+
+                        SpawnedRoom = NewSpawnedRoom;
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        int RandRoom = FMath::RandRange(0, SpawnedRooms.Num() - 1);
+
+
+        if (SpawnedRooms.Num() > 0)
+        {
+            SpawnedRoom = SpawnedRooms[RandRoom];
+        }
+
+
+    }
+
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(world, 0);
+
+    int32 RandSpawnRoom = FMath::RandRange(0, SpawnedRooms.Num() - 1);
+
+    if (SpawnedRooms.Num() > 0)
+    {
+        PlayerPawn->SetActorLocation(SpawnedRooms[RandSpawnRoom]->GetActorLocation());
+    }
+
+    AActor* FoundShipHull = UGameplayStatics::GetActorOfClass(world, AShipConvexHull::StaticClass());
+
+    if (FoundShipHull)
+    {
+        AShipConvexHull* ShipConvexHull = Cast<AShipConvexHull>(FoundShipHull);
+      //  ShipConvexHull->CreateConvexHull(SpawnedRooms);
+    }
+}
+
+ARoom* SpawnTypeClass::SpawnSpecificRoom(ERoomType RoomType)
+{
+    ARoom* Room = SpawnRandomClass();
+    while (Room->RoomType != RoomType)
+    {
+        Room->Destroy();
+
+        Room = SpawnRandomClass();
+    }
+
+    return Room;
+}
+
+SpawnTypeCA::SpawnTypeCA(TArray<TSubclassOf<ARoom>> SpawnableClasses, UWorld* World) : SpawnTypeClass(World, SpawnableClasses)
+{
+    Grid.SetNum(11);
+
+	TArray<ARoom*> CARooms;
+
+    for (int y = 0; y < 11; y++)
+    {
+        Grid[y].SetNum(11);
+
+        for (int x = 0; x < 11; x++)
+        {
+            Grid[y][x] = FMath::FRand() < 0.45f ? 1 : 0;
+        }
+    }
+
+    for (int step = 0; step < 7; step++)
+    {
+        SimulateStep(Grid);
+    }
+
+    for (int y = 0; y < 11; y++)
+    {
+        for (int x = 0; x < 11; x++)
+        {
+            if (Grid[y][x] == 1)
+            {
+                ARoom* Newroom = SpawnRandomClass(); 
+                //ARoom* Newroom = SpawnSpecificRoom(ERoomType::EMS_Normal);
+                FVector NewLocation = FVector(0);// Newroom->GetActorLocation() - Newroom->Mesh->GetComponentLocation();
+                Newroom->SetActorLocation(FVector(x * 4000+NewLocation.X, 0, y * 4000+NewLocation.Z));
+				int RandRot = FMath::RandRange(0, 3);
+                Newroom->AddActorLocalRotation(FRotator(RandRot*90, 0, 0));
+
+				CARooms.Add(Newroom);
             }
         }
     }
 
-    SpawnableClasses = UniqueSet.Array();
+	ARoom* CurrentRoom;
+    ARoom* PrevRoom;
 
-}
+	TArray<ARoom*> ProcessedRooms;
 
-ARoom* ARoomGenerator::SpawnRandomClass()
-{
-    if (SpawnableClasses.Num() > 0)
+
+    if (CARooms.Num() < 1)
     {
-        int32 Index = FMath::RandRange(0, SpawnableClasses.Num() - 1);
-        TSubclassOf<ARoom> ClassToSpawn = SpawnableClasses[Index];
+        return;
+	}
+    ProcessedRooms.Add(CARooms[0]);
+	CARooms.RemoveAt(0);
 
-        if (ClassToSpawn)
+
+
+    for (int k = 0; k < 4; k++)
+    {
+        for (int i = 0; i < CARooms.Num(); i++)//(ARoom* Room : CARooms)
         {
-            FActorSpawnParameters SpawnParams;
-            FVector Location = FVector(0); // Or any location
-            FRotator Rotation = FRotator(0);
+            CurrentRoom = CARooms[i];
+            CurrentRoom->CollectExits();
 
-            return GetWorld()->SpawnActor<ARoom>(ClassToSpawn, Location, Rotation, SpawnParams);
+
+            //if (k == 0 && i == 0)
+            //{
+
+            //    ProcessedRooms.Add(CurrentRoom);
+
+            //    continue;
+            //}
+
+            TArray<ARoom*> StoredRooms;
+
+            for (int j = 0; j < 4; j++)
+            {
+                if (j == 4)
+                {
+                    //CARooms.Remove(CurrentRoom);
+                    //CurrentRoom->Destroy();
+                    //break;
+                }
+
+                if (ProcessedRooms.Num() == 0)
+                {
+                    //CurrentRoom->Destroy();
+                    break;
+                }
+                PrevRoom = FindClosestRoom(ProcessedRooms, CurrentRoom);
+                PrevRoom->CollectExits();
+
+
+                //         if (IsValid(PrevRoom) == false)// || IsValid(CurrentRoom) == false)
+                //         {
+                         //	ProcessedRooms.Remove(PrevRoom);
+                //             if (j == 3)
+                //             {
+                //                 
+                //                 //CARooms.Remove(CurrentRoom);
+
+                //                 CurrentRoom->Destroy();
+                //             }
+                //             continue;
+                         //}
+
+                FRoomExit Entrance = CurrentRoom->ExitData[FMath::RandRange(0, CurrentRoom->ExitData.Num()-1)];//std::get<0>(FindClosestEntrance(CurrentRoom, CurrentRoom->GetActorl));
+
+                FRoomExit Exit = std::get<1>(FindClosestEntrance(PrevRoom, CurrentRoom->GetActorLocation()));
+
+                Entrance.ExitComponent->SetHiddenInGame(false);
+                FVector ExitDir = Exit.ExitComponent->GetForwardVector().GetSafeNormal();
+                FVector EntranceDir = Entrance.ExitComponent->GetForwardVector().GetSafeNormal();
+
+                float PitchDelta = FMath::FindDeltaAngleDegrees
+                (
+                    EntranceDir.Rotation().Pitch,
+                    ExitDir.Rotation().Pitch
+                );
+
+                CurrentRoom->AddActorLocalRotation(FRotator(PitchDelta, 0, 0));
+
+                if (FVector::CrossProduct(ExitDir, EntranceDir).IsNearlyZero())
+                {
+                    FVector EntranceWorldPos = Entrance.ExitComponent->GetComponentLocation();
+                    FVector ExitWorldPos = Exit.ExitComponent->GetComponentLocation();
+
+                    FVector Delta = ExitWorldPos - EntranceWorldPos;
+
+                    CurrentRoom->AddActorWorldOffset(Delta);
+
+                    CurrentRoom->AddActorWorldOffset(Exit.ExitComponent->GetForwardVector() * 1300);
+
+                    TArray<FOverlapResult> Overlaps;
+                    FCollisionQueryParams QueryParams;
+                    QueryParams.AddIgnoredActor(CurrentRoom);
+
+
+                    for (ARoom* Room : CARooms)
+                    {
+                        QueryParams.AddIgnoredActor(Room);
+					}
+
+                    bool bOverlapping = world->OverlapMultiByChannel(
+                        Overlaps,
+                        CurrentRoom->BoxComp->GetComponentLocation(),
+                        CurrentRoom->GetActorQuat(),
+                        ECC_WorldDynamic,
+                        FCollisionShape::MakeBox(CurrentRoom->BoxComp->GetScaledBoxExtent()),
+                        QueryParams
+                    );
+
+                    if (bOverlapping)
+                    {
+                        StoredRooms.Add(PrevRoom);
+                        ProcessedRooms.Remove(PrevRoom);
+                        continue;
+                    }
+
+                    AStaticMeshActor* NewTunnel = SpawnTunnel(Exit, Exit.ExitComponent->GetComponentLocation());
+
+					CARooms.Remove(CurrentRoom);
+                    ProcessedRooms.Add(CurrentRoom);
+
+                    break;
+                }
+
+                StoredRooms.Add(PrevRoom);
+                ProcessedRooms.Remove(PrevRoom);
+
+            }
+
+
+            for (ARoom* Room : StoredRooms)
+            {
+                ProcessedRooms.Add(Room);
+            }
+
+
         }
     }
 
-    return nullptr;
+    for (int i = 0; i < CARooms.Num(); i++)//(ARoom* Room : CARooms)
+    {
+        CARooms[i]->Destroy();
+    }
+
+
+} //after first roundof processed rooms, go through with carooms again and see if they can be stuck to anything
+
+std::tuple<FRoomExit, FRoomExit>  SpawnTypeCA::FindClosestEntrance(ARoom* NewRoom, FVector Location)
+{
+    NewRoom->CollectExits();
+    //OldRoom->CollectExits();
+    TArray<FRoomExit> NewExits = NewRoom->ExitData;
+    //TArray<FRoomExit> OldExits = OldRoom->ExitData;
+    FRoomExit ClosestNewExit;
+    FRoomExit ClosestOldExit;
+    float ClosestDistance = TNumericLimits<float>::Max();
+
+    for (FRoomExit NewExit : NewExits)
+    {
+       // for (FRoomExit OldExit : OldExits)
+        {
+            float Distance = FVector::Dist(NewExit.ExitComponent->GetComponentLocation(), Location);
+            if (Distance < ClosestDistance)
+            {
+                ClosestDistance = Distance;
+                ClosestNewExit = NewExit;
+               // ClosestOldExit = OldExit;
+            }
+        }
+    }
+
+	return std::make_tuple(ClosestNewExit, ClosestOldExit);
+
 }
 
+ARoom* SpawnTypeCA::FindClosestRoom(TArray<ARoom*> CARooms, ARoom* CurrentRoom)
+{
+    ARoom* ClosestRoom = CARooms[0];
+    float ClosestDist = TNumericLimits<float>::Max();
+    for (ARoom* Room : CARooms)
+    {
+        float Distance = FVector::Dist(Room->GetActorLocation(), CurrentRoom->GetActorLocation());
+
+        if (Room == CurrentRoom)
+        {
+            continue;
+        }
+        if (Distance < ClosestDist)
+        {
+            ClosestDist = Distance;
+            ClosestRoom = Room;
+        }
+
+    }
+
+    return ClosestRoom;
+}
+
+int SpawnTypeCA::CountNeighbours(int x, int y, const TArray<TArray<int>>& grid)
+{
+
+	int count = 0;
+
+    for (int ny = -1; ny <= 1; ny++)
+    {
+        for (int nx = -1; nx <= 1; nx++)
+        {
+            if (nx == 0 && ny == 0)
+            {
+                continue; // Skip the center cell
+            }
+            int checkX = x + nx;
+            int checkY = y + ny;
+            // Check if the neighboring cell is within bounds
+            if (checkX >= 0 && checkX < grid_width && checkY >= 0 && checkY < grid_height)
+            {
+                count += Grid[checkY][checkX];
+            }
+            else
+            {
+                count += 1;
+
+            }
+        }
+	}
+
+    return count;
+
+}
+
+
+
+void SpawnTypeCA::SimulateStep(TArray<TArray<int>>& _grid)
+{
+
+    TArray<TArray<int>> NewGrid = _grid;
+
+    for (int x= 0; x<= 10; x++)
+    {
+        for (int y = 0; y<=10; y++)
+        {
+            int neighbours = CountNeighbours(x, y, _grid);
+            if (neighbours >= 4)
+            {
+                NewGrid[x][y] = 0;
+            }
+            else
+            {
+                NewGrid[x][y] = 1;
+            }
+        }
+    }
+
+	_grid = NewGrid;
+}
 
 //                  ((`\                      ___    
 //              ___  \\ '--._      ___,.----'`   ', /__,-
