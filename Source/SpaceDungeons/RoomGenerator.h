@@ -8,6 +8,16 @@
 
 #include "RoomGenerator.generated.h"
 
+
+UENUM(BlueprintType)
+enum class EGenType : uint8
+{
+	EGT_Branches UMETA(DisplayName = "Branches"),
+
+	EGT_CA UMETA(DisplayName = "Cellular_Automata")
+
+};
+
 class ARoom;
 
 UCLASS()
@@ -21,6 +31,27 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<ARoom> RoomClass;
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+
+	UStaticMesh* TunnelMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	EGenType GenType;
+
+	UPROPERTY(EditAnywhere, Category = "BranchesSettings")
+	int NumberOfBranches;
+
+	UPROPERTY(EditAnywhere, Category = "BranchesSettings")
+	int BranchLength;
+
+	UPROPERTY(EditAnywhere, Category = "CASettings")
+	int GridSizeX;
+
+	UPROPERTY(EditAnywhere, Category = "CASettings")
+	int GridSizeY;
+
+	UPROPERTY(EditAnywhere, Category = "CASettings")
+	int NumberOfSteps;
 
 protected:
 	// Called when the game starts or when spawned
@@ -64,7 +95,7 @@ class SpawnTypeClass
 {
 public :
 
-	SpawnTypeClass(UWorld* world, TArray<TSubclassOf<ARoom>> spawnableClasses);
+	SpawnTypeClass(UWorld* world, TArray<TSubclassOf<ARoom>> spawnableClasses, UStaticMesh* TunnelMesh);
 
 	bool CanSpawnEngineRoom(ARoom* NewRoom, FRoomExit Exit, USceneComponent* Entrance, int32 Index);
 
@@ -72,27 +103,31 @@ public :
 
 	ARoom* SpawnRandomClass();
 
+	UStaticMesh* TunnelMesh;
+
 	AStaticMeshActor* SpawnTunnel(FRoomExit Exit, FVector FromLocation);
+
+	FQuat MatchRotation(ARoom* NewRoom, FRoomExit Exit, FRoomExit Entrance);
+
 
 protected : 
 	UWorld* world;
 
 	TArray<TSubclassOf<ARoom>> SpawnableClasses;
 
-
 };
 
 class SpawnTypeBranches : public SpawnTypeClass
 {
 public:
-	SpawnTypeBranches(TArray<TSubclassOf<ARoom>> SpawnableClasses, UWorld* World, ARoom* Room, TArray<ARoom*> SpawnedRooms); //: SpawnTypeClass(World, SpawnableClasses);
+	SpawnTypeBranches(TArray<TSubclassOf<ARoom>> SpawnableClasses, UWorld* World, ARoom* Room, TArray<ARoom*> SpawnedRooms, UStaticMesh* TunnelMesh, int Lenght, int BLength); //: SpawnTypeClass(World, SpawnableClasses);
     
 };
 
 class SpawnTypeCA : public SpawnTypeClass
 {
 public:
-	SpawnTypeCA(TArray<TSubclassOf<ARoom>> SpawnableClasses, UWorld* World); //: SpawnTypeClass(World, SpawnableClasses);
+	SpawnTypeCA(TArray<TSubclassOf<ARoom>> SpawnableClasses, UWorld* World, UStaticMesh* TunnelMesh, int gridx, int gridy, int min); //: SpawnTypeClass(World, SpawnableClasses);
 
 	int CountNeighbours(int x, int y, const TArray<TArray<int>>& grid);
 
@@ -102,8 +137,10 @@ public:
 
 	ARoom* FindClosestRoom(TArray<ARoom*> Rooms, ARoom* CurrentRoom);
 
-	int grid_width = 10;
-	int grid_height = 10;
+	int grid_width;
+	int grid_height;
+
+	int Steps;
 
 	TArray<TArray<int32>> Grid;
 	

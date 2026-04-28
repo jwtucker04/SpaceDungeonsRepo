@@ -19,7 +19,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 // ********** Begin Class ARoomGenerator ***********************************************************
 SPACEDUNGEONS_API UClass* Z_Construct_UClass_ARoomGenerator_NoRegister();
 
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_INCLASS_NO_PURE_DECLS \
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_26_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesARoomGenerator(); \
 	friend struct Z_Construct_UClass_ARoomGenerator_Statics; \
@@ -30,7 +30,7 @@ public: \
 	DECLARE_SERIALIZER(ARoomGenerator)
 
 
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_ENHANCED_CONSTRUCTORS \
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_26_ENHANCED_CONSTRUCTORS \
 	/** Deleted move- and copy-constructors, should never be used */ \
 	ARoomGenerator(ARoomGenerator&&) = delete; \
 	ARoomGenerator(const ARoomGenerator&) = delete; \
@@ -40,12 +40,12 @@ public: \
 	NO_API virtual ~ARoomGenerator();
 
 
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_13_PROLOG
-#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_GENERATED_BODY \
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_23_PROLOG
+#define FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_26_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_INCLASS_NO_PURE_DECLS \
-	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_16_ENHANCED_CONSTRUCTORS \
+	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_26_INCLASS_NO_PURE_DECLS \
+	FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h_26_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
@@ -56,5 +56,15 @@ class ARoomGenerator;
 
 #undef CURRENT_FILE_ID
 #define CURRENT_FILE_ID FID_Users_jwtuc_Documents_Unreal_Projects_SpaceDungeons_5_6_Source_SpaceDungeons_RoomGenerator_h
+
+// ********** Begin Enum EGenType ******************************************************************
+#define FOREACH_ENUM_EGENTYPE(op) \
+	op(EGenType::EGT_Branches) \
+	op(EGenType::EGT_CA) 
+
+enum class EGenType : uint8;
+template<> struct TIsUEnumClass<EGenType> { enum { Value = true }; };
+template<> SPACEDUNGEONS_API UEnum* StaticEnum<EGenType>();
+// ********** End Enum EGenType ********************************************************************
 
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

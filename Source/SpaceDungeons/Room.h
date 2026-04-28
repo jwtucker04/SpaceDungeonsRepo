@@ -31,8 +31,6 @@ enum class ERoomType : uint8
 	EMS_Bridge UMETA(DisplayName = "Bridge"),
 	EMS_Engine UMETA(DisplayName = "Engine")
 
-
-
 };
 
 UCLASS()
