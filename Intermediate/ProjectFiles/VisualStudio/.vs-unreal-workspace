@@ -1,0 +1,19 @@
+{
+  "targets": {
+    "SpaceDungeonsEditor": {
+      "targetType": "Editor",
+      "targetPath": "C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons 5.6\\Source\\SpaceDungeonsEditor.Target.cs",
+      "projectPath": "C:\\Users\\jwtuc\\Documents\\Unreal Projects\\SpaceDungeons 5.6\\SpaceDungeons.uproject",
+      "configurations": [
+        "Development"
+      ],
+      "platforms": [
+        "Win64"
+      ],
+      "architectures": [],
+      "configurationsAndPlatforms": [
+        "Development-Win64"
+      ]
+    }
+  }
+}
